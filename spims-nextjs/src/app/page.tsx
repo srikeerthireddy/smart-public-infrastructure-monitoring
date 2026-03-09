@@ -1,84 +1,232 @@
 'use client';
 
 import Link from 'next/link';
-import { AlertTriangle, MapPin, Users, TrendingUp } from 'lucide-react';
+import { AlertTriangle, MapPin, Users, TrendingUp, Building2, Shield, CheckCircle, ArrowRight, Clock } from 'lucide-react';
 
 export default function Home() {
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-25 via-indigo-25 to-purple-25" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #f8fafc 50%, #faf5ff 100%)'}}>
-      {/* Header */}
-      <header className="bg-white/60 backdrop-blur-md shadow-sm border-b border-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Navigation */}
+      <nav className="bg-white/90 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                <AlertTriangle className="h-6 w-6 text-white" />
+              <div className="flex-shrink-0 flex items-center">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-xl shadow-md">
+                  <Shield className="h-7 w-7 text-white" />
+                </div>
+                <span className="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">SPIMS</span>
+                <span className="ml-3 text-sm text-gray-600 hidden lg:inline font-medium">Smart Public Infrastructure Monitoring</span>
               </div>
-              <h1 className="ml-3 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SPIMS</h1>
-              <span className="ml-3 text-sm text-gray-600 hidden md:inline">Smart Public Infrastructure Monitoring</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link 
+            
+            <div className="flex items-center space-x-2">
+              <Link
                 href="/users-dashboard/auth/login"
-                className="text-gray-700 hover:text-blue-600 px-6 py-2 rounded-lg text-sm font-medium transition-colors bg-white/50 hover:bg-white/80 border border-blue-200"
+                className="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-white/60 hover:bg-white/90 border border-gray-200 hover:border-blue-300"
               >
-                Sign In
+                Public Login
+              </Link>
+              <Link
+                href="/enterprise/auth/login"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center space-x-2"
+              >
+                <Building2 className="w-4 h-4" />
+                <span>Enterprise</span>
+              </Link>
+              <Link
+                href="/admin/auth/login"
+                className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center space-x-2"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Admin</span>
               </Link>
             </div>
           </div>
         </div>
-      </header>
+      </nav>
 
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-800 sm:text-5xl leading-tight">
-            Make Your Community
-            <span className="text-blue-600 block">Better Together</span>
-          </h2>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Report infrastructure problems, track progress, and collaborate with local authorities 
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Smart Public Infrastructure
+            <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Monitoring System
+            </span>
+          </h1>
+          
+          <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+            Report infrastructure problems, track progress, and collaborate with local authorities
             to create safer, better communities for everyone.
           </p>
-          
-          {/* Call to Action */}
-          <div className="mt-8 space-y-4">
-            <div className="flex justify-center">
-              <Link 
-                href="/users-dashboard/auth/register"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-4 px-10 rounded-xl text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
-              >
-                🚀 Get Started Free
-              </Link>
+        </div>
+
+        {/* Side by Side Call to Action Cards */}
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Public Users Card */}
+          <div className="group relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+            <div className="relative bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">For Public Users</h3>
+                  <p className="text-gray-500 text-sm">Community Members</p>
+                </div>
+              </div>
+              
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Report infrastructure issues like broken street lights, potholes, water leaks, and track their resolution in real-time.
+              </p>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Report issues with photos & location</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Track complaint status in real-time</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>View issues on interactive map</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Get updates via notifications</span>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Link
+                  href="/users-dashboard/auth/register"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 block text-center group"
+                >
+                  <span className="flex items-center justify-center">
+                    🚀 Get Started Free
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+                <Link
+                  href="/users-dashboard/auth/login"
+                  className="border-2 border-gray-300 text-gray-700 hover:border-blue-500 hover:text-blue-600 font-medium py-3 px-6 rounded-xl transition-all duration-200 block text-center"
+                >
+                  Already have an account? Sign In
+                </Link>
+              </div>
             </div>
-            <p className="text-sm text-gray-600">Join thousands making their communities better</p>
           </div>
 
-          {/* Stats Section */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-5 shadow-md border border-blue-50">
-              <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent mb-2">10K+</div>
-              <div className="text-gray-600 text-sm font-medium">Issues Resolved</div>
+          {/* Enterprise Users Card */}
+          <div className="group relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+            <div className="relative bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                  <Building2 className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">For Government & Enterprises</h3>
+                  <p className="text-gray-500 text-sm">Departments & Organizations</p>
+                </div>
+              </div>
+              
+              <p className="text-gray-600 mb-6 leading-relaxed">
+                Manage complaints efficiently, assign workers, track department performance, and ensure timely resolution of public issues.
+              </p>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>View & manage all complaints</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Assign workers to specific issues</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Track performance analytics</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
+                  <span>Generate detailed reports</span>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <Link
+                  href="/enterprise/auth/register"
+                  className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200 block text-center group"
+                >
+                  <span className="flex items-center justify-center">
+                    🏢 Register Enterprise
+                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Link>
+                <Link
+                  href="/enterprise/auth/login"
+                  className="border-2 border-gray-300 text-gray-700 hover:border-indigo-500 hover:text-indigo-600 font-medium py-3 px-6 rounded-xl transition-all duration-200 block text-center"
+                >
+                  Enterprise Login
+                </Link>
+              </div>
             </div>
-            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-5 shadow-md border border-green-50">
-              <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent mb-2">50+</div>
-              <div className="text-gray-600 text-sm font-medium">Cities Connected</div>
+          </div>
+        </div>
+
+        {/* Bottom Trust Section */}
+        <div className="text-center mt-16">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 shadow-lg max-w-2xl mx-auto">
+            <h4 className="text-xl font-semibold text-gray-900 mb-3">Join Thousands Making Their Communities Better</h4>
+            <p className="text-gray-600 mb-4">
+              Over 10,000+ issues resolved • 500+ communities served • 24/7 monitoring
+            </p>
+            <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
+              <div className="flex items-center">
+                <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                <span>Free for Public</span>
+              </div>
+              <div className="flex items-center">
+                <Shield className="w-4 h-4 text-blue-500 mr-2" />
+                <span>Secure & Private</span>
+              </div>
+              <div className="flex items-center">
+                <Clock className="w-4 h-4 text-purple-500 mr-2" />
+                <span>Real-time Updates</span>
+              </div>
             </div>
-            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-5 shadow-md border border-purple-50">
-              <div className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent mb-2">25K+</div>
-              <div className="text-gray-600 text-sm font-medium">Active Citizens</div>
-            </div>
-            <div className="text-center bg-white/50 backdrop-blur-sm rounded-xl p-5 shadow-md border border-orange-50">
-              <div className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent mb-2">72hrs</div>
-              <div className="text-gray-600 text-sm font-medium">Avg Response Time</div>
-            </div>
+          </div>
+        </div>
+
+        {/* Stats Section */}
+        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-blue-100 hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent mb-2">10K+</div>
+            <div className="text-gray-600 text-sm font-medium">Issues Resolved</div>
+          </div>
+          <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent mb-2">500+</div>
+            <div className="text-gray-600 text-sm font-medium">Communities</div>
+          </div>
+          <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-purple-600 bg-clip-text text-transparent mb-2">25K+</div>
+            <div className="text-gray-600 text-sm font-medium">Active Users</div>
+          </div>
+          <div className="text-center bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-orange-100 hover:shadow-xl transition-all duration-300">
+            <div className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent mb-2">24/7</div>
+            <div className="text-gray-600 text-sm font-medium">Monitoring</div>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-red-50">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-red-100">
             <div className="bg-gradient-to-r from-red-400 to-pink-400 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-md">
               <AlertTriangle className="h-6 w-6 text-white" />
             </div>
@@ -86,7 +234,7 @@ export default function Home() {
             <p className="text-gray-600 text-sm leading-relaxed">Submit complaints about broken streetlights, potholes, and infrastructure problems</p>
           </div>
           
-          <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-green-50">
+          <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-green-100">
             <div className="bg-gradient-to-r from-green-400 to-emerald-400 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-md">
               <MapPin className="h-6 w-6 text-white" />
             </div>
@@ -94,7 +242,7 @@ export default function Home() {
             <p className="text-gray-600 text-sm leading-relaxed">Pinpoint exact locations and view issues on interactive maps with GPS precision</p>
           </div>
           
-          <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-blue-50">
+          <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-blue-100">
             <div className="bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-md">
               <Users className="h-6 w-6 text-white" />
             </div>
@@ -102,7 +250,7 @@ export default function Home() {
             <p className="text-gray-600 text-sm leading-relaxed">Collaborate with neighbors and local authorities to solve problems faster</p>
           </div>
           
-          <div className="bg-white/50 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-purple-50">
+          <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 text-center hover:shadow-xl hover:scale-105 transition-all duration-300 border border-purple-100">
             <div className="bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 shadow-md">
               <TrendingUp className="h-6 w-6 text-white" />
             </div>
@@ -112,88 +260,52 @@ export default function Home() {
         </div>
 
         {/* How It Works */}
-        <div className="mt-16 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-2xl shadow-xl p-10 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 backdrop-blur-2xl"></div>
+        <div className="mt-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl p-12 text-white relative overflow-hidden max-w-5xl mx-auto">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30 backdrop-blur-3xl"></div>
           <div className="relative z-10">
-            <h3 className="text-3xl font-bold mb-10 text-center">Simple. Fast. Effective.</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <h3 className="text-4xl font-bold mb-12 text-center">Simple. Fast. Effective.</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               <div className="text-center">
-                <div className="bg-white/25 backdrop-blur-sm rounded-xl w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg border border-white/20">
-                  <span className="text-2xl font-bold text-white drop-shadow-lg">1</span>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-xl border border-white/30">
+                  <span className="text-3xl font-bold text-white drop-shadow-lg">1</span>
                 </div>
-                <h4 className="text-xl font-bold mb-3">📸 Report Issue</h4>
-                <p className="text-blue-100 leading-relaxed text-sm">Spot a problem? Take a photo, add location, and submit your report in under 60 seconds.</p>
+                <h4 className="text-2xl font-bold mb-4">📸 Report Issue</h4>
+                <p className="text-blue-100 leading-relaxed">Spot a problem? Take a photo, add location, and submit your report in under 60 seconds.</p>
               </div>
               <div className="text-center">
-                <div className="bg-white/25 backdrop-blur-sm rounded-xl w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg border border-white/20">
-                  <span className="text-2xl font-bold text-white drop-shadow-lg">2</span>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-xl border border-white/30">
+                  <span className="text-3xl font-bold text-white drop-shadow-lg">2</span>
                 </div>
-                <h4 className="text-xl font-bold mb-3">📊 Track Progress</h4>
-                <p className="text-blue-100 leading-relaxed text-sm">Monitor your complaint status and receive real-time updates from local authorities.</p>
+                <h4 className="text-2xl font-bold mb-4">📊 Track Progress</h4>
+                <p className="text-blue-100 leading-relaxed">Monitor your complaint status and receive real-time updates from local authorities.</p>
               </div>
               <div className="text-center">
-                <div className="bg-white/25 backdrop-blur-sm rounded-xl w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg border border-white/20">
-                  <span className="text-2xl font-bold text-white drop-shadow-lg">3</span>
+                <div className="bg-white/20 backdrop-blur-sm rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-xl border border-white/30">
+                  <span className="text-3xl font-bold text-white drop-shadow-lg">3</span>
                 </div>
-                <h4 className="text-xl font-bold mb-3">✨ See Results</h4>
-                <p className="text-blue-100 leading-relaxed text-sm">Watch your community transform through collaborative problem-solving and action.</p>
+                <h4 className="text-2xl font-bold mb-4">✨ See Results</h4>
+                <p className="text-blue-100 leading-relaxed">Watch your community transform through collaborative problem-solving and action.</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Testimonials */}
-        <div className="mt-16 bg-white/40 backdrop-blur-sm rounded-2xl shadow-lg p-10 border border-gray-50">
-          <h3 className="text-2xl font-bold text-gray-800 mb-8 text-center">What Our Community Says</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center bg-gradient-to-br from-blue-25 to-blue-50 rounded-xl p-6 shadow-md" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #dbeafe 100%)'}}>
-              <div className="bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 shadow-md">
-                <span className="text-2xl">👩‍💼</span>
-              </div>
-              <p className="text-gray-700 mb-4 italic text-sm leading-relaxed">
-                "SPIMS helped us get our broken streetlight fixed in just 2 days. The process was so simple!"
-              </p>
-              <div className="font-bold text-gray-800 text-sm">Sarah Johnson</div>
-              <div className="text-xs text-blue-600 font-medium">Downtown Resident</div>
-            </div>
-            <div className="text-center bg-gradient-to-br from-green-25 to-green-50 rounded-xl p-6 shadow-md" style={{background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)'}}>
-              <div className="bg-gradient-to-r from-green-400 to-emerald-400 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 shadow-md">
-                <span className="text-2xl">👨‍🔧</span>
-              </div>
-              <p className="text-gray-700 mb-4 italic text-sm leading-relaxed">
-                "As a city worker, SPIMS helps us prioritize and respond to issues much faster than before."
-              </p>
-              <div className="font-bold text-gray-800 text-sm">Mike Rodriguez</div>
-              <div className="text-xs text-green-600 font-medium">City Maintenance</div>
-            </div>
-            <div className="text-center bg-gradient-to-br from-purple-25 to-purple-50 rounded-xl p-6 shadow-md" style={{background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)'}}>
-              <div className="bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full w-14 h-14 flex items-center justify-center mx-auto mb-4 shadow-md">
-                <span className="text-2xl">👵</span>
-              </div>
-              <p className="text-gray-700 mb-4 italic text-sm leading-relaxed">
-                "I love being able to track the progress of my reports. It makes me feel heard and valued."
-              </p>
-              <div className="font-bold text-gray-800 text-sm">Eleanor Davis</div>
-              <div className="text-xs text-purple-600 font-medium">Community Advocate</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="mt-16 bg-gradient-to-r from-blue-25 via-purple-25 to-indigo-25 rounded-2xl p-10 text-center border border-blue-50 shadow-lg" style={{background: 'linear-gradient(135deg, #f0f9ff 0%, #faf5ff 50%, #f8fafc 100%)'}}>
-          <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">Ready to Transform Your Community?</h3>
-          <p className="text-lg text-gray-600 mb-8 max-w-xl mx-auto leading-relaxed">
+        {/* Final Call to Action */}
+        <div className="mt-20 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-3xl p-12 text-center border border-blue-200 shadow-xl max-w-4xl mx-auto">
+          <h3 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">Ready to Transform Your Community?</h3>
+          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
             Join thousands of active citizens making their neighborhoods safer, cleaner, and better for everyone.
           </p>
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-6">
             <Link 
               href="/users-dashboard/auth/register"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-4 px-12 rounded-xl text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-5 px-16 rounded-2xl text-xl shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-3"
             >
-              🚀 Start Making Impact
+              <span>🚀 Start Making Impact</span>
+              <ArrowRight className="w-6 h-6" />
             </Link>
           </div>
-          <p className="mt-4 text-sm text-gray-500 font-medium">Free forever • No credit card required • Join in 30 seconds</p>
+          <p className="text-gray-500 font-medium">Free forever • No credit card required • Join in 30 seconds</p>
         </div>
       </main>
 
