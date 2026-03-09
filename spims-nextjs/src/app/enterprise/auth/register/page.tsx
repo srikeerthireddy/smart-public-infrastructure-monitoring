@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Building2, Mail, Lock, User, Phone, MapPin, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 export default function EnterpriseRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
