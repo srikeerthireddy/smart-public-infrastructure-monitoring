@@ -1,0 +1,46 @@
+{
+  "name": "spims-database",
+  "version": "1.0.0",
+  "description": "SPIMS Database utilities and management tools",
+  "main": "test_connection.js",
+  "scripts": {
+    "test": "node test_connection.js",
+    "test:stats": "node test_connection.js --stats",
+    "setup": "psql -U spims_user -d spims_db -f setup.sql",
+    "seed": "psql -U spims_user -d spims_db -f seeds/seed_data.sql",
+    "migrate": "npm run migrate:001 && npm run migrate:002 && npm run migrate:003",
+    "migrate:001": "psql -U spims_user -d spims_db -f migrations/001_create_initial_schema.sql",
+    "migrate:002": "psql -U spims_user -d spims_db -f migrations/002_add_additional_tables.sql",
+    "migrate:003": "psql -U spims_user -d spims_db -f migrations/003_add_triggers_and_functions.sql",
+    "backup": "pg_dump -U spims_user -d spims_db > backups/spims_backup_$(date +%Y%m%d_%H%M%S).sql",
+    "restore": "psql -U spims_user -d spims_db < backups/latest_backup.sql"
+  },
+  "keywords": [
+    "spims",
+    "database",
+    "postgresql",
+    "infrastructure",
+    "monitoring"
+  ],
+  "author": "SPIMS Development Team",
+  "license": "MIT",
+  "dependencies": {
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/spims-database.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/spims-database/issues"
+  },
+  "homepage": "https://github.com/your-org/spims-database#readme"
+}
