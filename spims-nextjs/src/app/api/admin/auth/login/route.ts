@@ -15,11 +15,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin user
+    // Find admin from admins table (separate from public/enterprise users)
     const result = await query(
-      `SELECT id, name, email, password, role, phone, address, is_active 
-       FROM users 
-       WHERE email = $1 AND role = 'admin' AND is_active = true`,
+      `SELECT id, name, email, password, phone, is_active 
+       FROM admins 
+       WHERE email = $1 AND is_active = true`,
       [email]
     );
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       { 
         userId: admin.id, 
         email: admin.email, 
-        role: admin.role,
+        role: 'admin',
         isAdmin: true
       },
       process.env.JWT_SECRET!,
@@ -60,9 +60,8 @@ export async function POST(request: NextRequest) {
         id: admin.id,
         name: admin.name,
         email: admin.email,
-        role: admin.role,
-        phone: admin.phone,
-        address: admin.address
+        role: 'admin',
+        phone: admin.phone
       }
     });
 

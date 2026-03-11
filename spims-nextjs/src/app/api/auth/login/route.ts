@@ -15,9 +15,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user by email
+    // Find public user only (admins use /admin/auth/login, enterprises use /enterprise/auth/login)
     const result = await query(
-      'SELECT id, name, email, password, role, created_at FROM users WHERE email = $1 AND is_active = true',
+      "SELECT id, name, email, password, role, created_at FROM users WHERE email = $1 AND role = 'public' AND is_active = true",
       [email]
     );
 

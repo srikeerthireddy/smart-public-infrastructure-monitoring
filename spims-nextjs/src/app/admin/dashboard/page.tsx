@@ -70,7 +70,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: 'public' | 'enterprise' | 'admin';
+  role: 'public' | 'enterprise';
   phone?: string;
   approval_status: string;
   is_active: boolean;
@@ -826,7 +826,6 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            user.role === 'admin' ? 'bg-red-100 text-red-800' :
                             user.role === 'enterprise' ? 'bg-blue-100 text-blue-800' :
                             'bg-green-100 text-green-800'
                           }`}>
@@ -859,7 +858,7 @@ export default function AdminDashboard() {
                                 Activate
                               </button>
                             )}
-                            {user.is_active && user.role !== 'admin' && (
+                            {user.is_active && (
                               <button className="text-red-600 hover:text-red-900 text-xs">
                                 Deactivate
                               </button>

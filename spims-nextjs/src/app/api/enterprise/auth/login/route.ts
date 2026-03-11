@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const result = await query(
       `SELECT 
         u.id, u.name, u.email, u.password, u.role, u.phone, u.address,
-        u.enterprise_id, u.approval_status, u.approved_by, u.approved_at,
+        u.enterprise_id, u.approval_status, u.approved_by_admin_id, u.approved_at,
         e.name as enterprise_name, e.department, e.contact_email
        FROM users u
        LEFT JOIN enterprises e ON u.enterprise_id = e.id
@@ -99,6 +99,7 @@ export async function POST(request: NextRequest) {
         enterprise_id: user.enterprise_id,
         approval_status: user.approval_status,
         approved_at: user.approved_at,
+        approved_by_admin_id: user.approved_by_admin_id,
         enterprise: {
           name: user.enterprise_name,
           department: user.department,

@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
         u.phone as user_phone,
         u.address as user_address,
         COALESCE(u.approval_status, 'pending') as approval_status,
-        u.approved_by,
+        u.approved_by_admin_id,
         u.approved_at,
         u.created_at as registration_date,
         e.id as enterprise_id,
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         approver.name as approved_by_name
       FROM users u
       LEFT JOIN enterprises e ON u.enterprise_id = e.id
-      LEFT JOIN users approver ON u.approved_by = approver.id
+      LEFT JOIN admins approver ON u.approved_by_admin_id = approver.id
       WHERE u.role = 'enterprise'
       ORDER BY 
         CASE COALESCE(u.approval_status, 'pending')
@@ -89,20 +89,12 @@ export async function PATCH(request: NextRequest) {
 
     const newStatus = action === 'approve' ? 'approved' : 'rejected';
 
-    // Update user approval status
+    // Update user approval status (approved_by_admin_id references admins table)
     await query(
       `UPDATE users 
-       SET approval_status = $1, approved_by = $2, approved_at = CURRENT_TIMESTAMP
+       SET approval_status = $1, approved_by_admin_id = $2, approved_at = CURRENT_TIMESTAMP
        WHERE id = $3 AND role = 'enterprise'`,
       [newStatus, admin.userId, userId]
-    );
-
-    // Log the approval/rejection
-    await query(
-      `INSERT INTO status_updates (complaint_id, old_status, new_status, updated_by, update_notes)
-       SELECT NULL, 'pending'::complaint_status, $1::complaint_status, $2, $3
-       WHERE EXISTS (SELECT 1 FROM users WHERE id = $4 AND role = 'enterprise')`,
-      [newStatus, admin.userId, notes || `Enterprise ${action}ed by admin`, userId]
     );
 
     return NextResponse.json({

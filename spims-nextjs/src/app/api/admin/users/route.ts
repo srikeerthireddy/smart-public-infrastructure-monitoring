@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         e.department as enterprise_department
       FROM users u
       LEFT JOIN enterprises e ON u.enterprise_id = e.id
+      WHERE u.role IN ('public', 'enterprise')
       ORDER BY u.created_at DESC
     `);
 
