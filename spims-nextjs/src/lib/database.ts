@@ -1,11 +1,13 @@
 import { Pool } from 'pg';
 
 // Database connection: use DATABASE_URL for Neon (deployment) or DB_* for local pgAdmin
+// Serverless (Vercel): use max 2 to avoid exhausting Neon connections across many instances
+const isServerless = !!process.env.DATABASE_URL && process.env.VERCEL === '1';
 const poolConfig = process.env.DATABASE_URL
   ? {
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
-      max: 20,
+      max: isServerless ? 2 : 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
     }
@@ -22,14 +24,10 @@ const poolConfig = process.env.DATABASE_URL
 
 const pool = new Pool(poolConfig);
 
-// Test database connection
-pool.on('connect', () => {
-  console.log('Connected to PostgreSQL database');
-});
-
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-  process.exit(-1);
+  console.error('Database pool error:', err.message);
+  // Don't exit in serverless - would crash the function
+  if (!process.env.VERCEL) process.exit(-1);
 });
 
 // Helper function to execute queries

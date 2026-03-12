@@ -5,6 +5,21 @@ import { query } from '@/lib/database';
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.JWT_SECRET) {
+      console.error('Admin login: JWT_SECRET not set in environment');
+      return NextResponse.json(
+        { error: 'Server configuration error. Check environment variables.' },
+        { status: 503 }
+      );
+    }
+    if (!process.env.DATABASE_URL) {
+      console.error('Admin login: DATABASE_URL not set in environment');
+      return NextResponse.json(
+        { error: 'Server configuration error. Check environment variables.' },
+        { status: 503 }
+      );
+    }
+
     const { email, password } = await request.json();
 
     // Validate input
@@ -15,12 +30,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin from admins table (separate from public/enterprise users)
+    // Find admin (handles typo: admin@spins.gov vs admin@spims.gov in DB)
+    const normalizedEmail = email.toLowerCase().trim();
     const result = await query(
       `SELECT id, name, email, password, phone, is_active 
        FROM admins 
-       WHERE email = $1 AND is_active = true`,
-      [email]
+       WHERE (email = $1 OR email = $2) AND is_active = true
+       LIMIT 1`,
+      [normalizedEmail, normalizedEmail === 'admin@spims.gov' ? 'admin@spins.gov' : 'admin@spims.gov']
     );
 
     if (result.rows.length === 0) {
@@ -75,10 +92,10 @@ export async function POST(request: NextRequest) {
 
     return response;
 
-  } catch (error) {
-    console.error('Admin login error:', error);
+  } catch (error: any) {
+    console.error('Admin login error:', error?.message || error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: process.env.NODE_ENV === 'development' ? (error?.message || 'Internal server error') : 'Internal server error' },
       { status: 500 }
     );
   }
