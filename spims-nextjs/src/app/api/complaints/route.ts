@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     const decoded = verifyToken(request);
     const userId = decoded.userId;
 
-    const { title, description, location, latitude, longitude, image_url } = await request.json();
+    const { title, description, location, latitude, longitude, image_url, category } = await request.json();
 
     // Validate required fields
     if (!title || !description || !location) {
@@ -68,14 +68,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Insert new complaint
+    // Insert new complaint into database
     const result = await query(
       `INSERT INTO complaints (title, description, location, latitude, longitude, 
-                              image_url, status, user_id) 
-       VALUES ($1, $2, $3, $4, $5, $6, 'reported', $7) 
+                              image_url, status, user_id, category) 
+       VALUES ($1, $2, $3, $4, $5, $6, 'reported', $7, $8) 
        RETURNING id, title, description, location, latitude, longitude, 
-                 status, image_url, created_at, updated_at`,
-      [title, description, location, latitude || null, longitude || null, image_url || null, userId]
+                 status, image_url, category, created_at, updated_at`,
+      [title, description, location, latitude || null, longitude || null, image_url || null, userId, category || null]
     );
 
     const newComplaint = result.rows[0];

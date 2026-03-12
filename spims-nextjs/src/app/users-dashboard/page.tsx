@@ -27,11 +27,9 @@ export default function UsersDashboard() {
       window.history.replaceState({}, '', '/users-dashboard');
     }
 
-    // Load complaints from database or localStorage
     const loadComplaints = async () => {
       try {
-        // Try database first
-        const response = await fetch('/api/complaints/stats');
+        const response = await fetch('/api/complaints/stats', { credentials: 'include' });
         if (response.ok) {
           const data = await response.json();
           console.log('Database stats loaded:', data);
@@ -40,29 +38,8 @@ export default function UsersDashboard() {
           return;
         }
       } catch (error) {
-        console.error('Database stats failed, using localStorage:', error);
+        console.error('Failed to load complaints:', error);
       }
-      
-      // Fall back to localStorage
-      const complaints = JSON.parse(localStorage.getItem('spims_complaints') || '[]');
-      const userComplaints = complaints.filter((c: any) => c.user_id === user.id);
-      
-      // Calculate stats
-      const newStats = {
-        totalComplaints: userComplaints.length,
-        pendingComplaints: userComplaints.filter((c: any) => c.status === 'reported').length,
-        inProgressComplaints: userComplaints.filter((c: any) => c.status === 'in_progress').length,
-        resolvedComplaints: userComplaints.filter((c: any) => c.status === 'resolved').length
-      };
-      
-      setStats(newStats);
-      
-      // Get recent complaints (last 5)
-      const recent = userComplaints
-        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        .slice(0, 5);
-      
-      setRecentComplaints(recent);
     };
 
     if (user.id) {

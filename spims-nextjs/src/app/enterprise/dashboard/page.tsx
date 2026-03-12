@@ -89,7 +89,7 @@ export default function EnterpriseDashboard() {
       
       // For now, let's use mock data since we need to implement the enterprise APIs
       // Fetch complaints data
-      const complaintsResponse = await fetch('/api/enterprise/complaints');
+      const complaintsResponse = await fetch('/api/enterprise/complaints', { credentials: 'include' });
 
       if (complaintsResponse.ok) {
         const complaintsData = await complaintsResponse.json();
@@ -163,9 +163,8 @@ export default function EnterpriseDashboard() {
     try {
       const response = await fetch('/api/enterprise/complaints', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           complaintId,
           status: newStatus,

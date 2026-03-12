@@ -26,52 +26,40 @@ export default function ComplaintDetail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock API call - replace with actual API endpoint
     const fetchComplaintDetails = async () => {
       setLoading(true);
-      
-      // Mock data
-      const mockComplaint: Complaint = {
-        id: complaintId,
-        title: 'Street Light Not Working',
-        description: 'The street light on Main Road has been out for 3 days, making it dangerous for pedestrians at night. This is a major safety concern as there have been several near-miss incidents.',
-        location: 'Main Road, Downtown Area, Near City Hall',
-        latitude: 40.7128,
-        longitude: -74.0060,
-        status: 'in_progress',
-        user_id: 'user1',
-        created_at: new Date('2026-03-07T10:30:00'),
-        updated_at: new Date('2026-03-08T14:20:00'),
-        image_url: '/api/images/streetlight.jpg'
-      };
-
-      const mockStatusUpdates: StatusUpdate[] = [
-        {
-          id: '1',
-          complaint_id: complaintId,
-          status: 'reported',
-          updated_by: 'John Doe (You)',
-          updated_at: new Date('2026-03-07T10:30:00'),
-          comment: 'Initial complaint submitted with photo evidence.'
-        },
-        {
-          id: '2',
-          complaint_id: complaintId,
-          status: 'in_progress',
-          updated_by: 'City Maintenance Department',
-          updated_at: new Date('2026-03-08T14:20:00'),
-          comment: 'Complaint assigned to electrical maintenance team. Work order #MT-2026-0308 created. Expected completion within 2-3 business days.'
+      try {
+        const response = await fetch(`/api/complaints/${complaintId}`, { credentials: 'include' });
+        if (response.ok) {
+          const data = await response.json();
+          const c = data.complaint;
+          setComplaint({
+            id: c.id,
+            title: c.title,
+            description: c.description,
+            location: c.location,
+            latitude: c.latitude,
+            longitude: c.longitude,
+            status: c.status,
+            user_id: c.user_name,
+            created_at: new Date(c.created_at),
+            updated_at: new Date(c.updated_at),
+            image_url: c.image_url
+          });
+          setStatusUpdates((data.statusUpdates || []).map((s: any) => ({
+            id: s.id,
+            complaint_id: complaintId,
+            status: s.new_status,
+            updated_by: s.updated_by_name,
+            updated_at: new Date(s.created_at),
+            comment: s.notes
+          })));
         }
-      ];
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setComplaint(mockComplaint);
-      setStatusUpdates(mockStatusUpdates);
+      } catch (error) {
+        console.error('Failed to load complaint:', error);
+      }
       setLoading(false);
     };
-
     fetchComplaintDetails();
   }, [complaintId]);
 

@@ -132,65 +132,25 @@ export default function NewComplaint() {
         location: formData.location,
         latitude: formData.latitude || undefined,
         longitude: formData.longitude || undefined,
-        image_url: selectedImage ? URL.createObjectURL(selectedImage) : undefined
+        category: formData.title, // Issue type as category
+        image_url: null // Image upload requires separate API (S3/cloud storage)
       };
 
-      try {
-        // Try database submission first
-        const response = await fetch('/api/complaints', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(complaintData),
-        });
+      const response = await fetch('/api/complaints', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Send auth cookies
+        body: JSON.stringify(complaintData),
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Database complaint submitted:', data.complaint);
-          
-          // Redirect to dashboard with success message
-          router.push('/users-dashboard?success=complaint-submitted');
-          return;
-        } else {
-          const error = await response.json();
-          throw new Error(error.error || 'Database submission failed');
-        }
-      } catch (dbError) {
-        console.error('Database submission failed, using localStorage:', dbError);
-        
-        // Fall back to localStorage
-        const currentUser = JSON.parse(localStorage.getItem('spims_current_user') || '{}');
-        
-        const newComplaint = {
-          id: Date.now().toString(),
-          title: formData.title,
-          description: formData.description,
-          location: formData.location,
-          latitude: formData.latitude || 0,
-          longitude: formData.longitude || 0,
-          status: 'reported',
-          user_id: currentUser.id,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          image_url: selectedImage ? URL.createObjectURL(selectedImage) : null
-        };
-        
-        // Get existing complaints
-        const existingComplaints = JSON.parse(localStorage.getItem('spims_complaints') || '[]');
-        
-        // Add new complaint
-        const updatedComplaints = [...existingComplaints, newComplaint];
-        localStorage.setItem('spims_complaints', JSON.stringify(updatedComplaints));
-        
-        console.log('LocalStorage complaint submitted:', newComplaint);
-        
-        // Mock API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Redirect to dashboard with success message
+      if (response.ok) {
+        const data = await response.json();
         router.push('/users-dashboard?success=complaint-submitted');
+        return;
       }
+
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to submit complaint');
     } catch (error) {
       console.error('Error submitting complaint:', error);
       alert('Failed to submit complaint. Please try again.');

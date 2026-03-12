@@ -116,7 +116,12 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Create or update assignment
+    const complaintCheck = await query('SELECT 1 FROM complaints WHERE id = $1', [complaintId]);
+    if (complaintCheck.rows.length === 0) {
+      return NextResponse.json({ error: 'Complaint not found' }, { status: 404 });
+    }
+
+    // Create or update assignment in database (assigned_by stores admin id for audit)
     await query(
       `INSERT INTO complaint_assignments (complaint_id, enterprise_id, worker_id, assigned_by, assigned_at, notes, priority_level)
        VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, $5, $6)
@@ -125,7 +130,7 @@ export async function PATCH(request: NextRequest) {
       [complaintId, enterpriseId, workerId || null, admin.userId, notes || 'Assigned by admin', priority || 1]
     );
 
-    // Update complaint status to in_progress if it was reported
+    // Update complaint status to in_progress in database
     await query(
       `UPDATE complaints 
        SET status = CASE WHEN status = 'reported' THEN 'in_progress'::complaint_status ELSE status END,

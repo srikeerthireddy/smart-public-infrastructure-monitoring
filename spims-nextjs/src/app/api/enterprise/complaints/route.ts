@@ -20,12 +20,11 @@ function verifyEnterpriseToken(request: NextRequest) {
   }
 }
 
-// GET - Get complaints assigned to enterprise
+// GET - Get complaints assigned to this enterprise only
 export async function GET(request: NextRequest) {
   try {
     const enterprise = verifyEnterpriseToken(request);
 
-    // Get all complaints (for now, later we'll add assignment logic)
     const result = await query(`
       SELECT 
         c.id,
@@ -37,6 +36,7 @@ export async function GET(request: NextRequest) {
         c.status,
         c.priority,
         c.category,
+        c.image_url,
         c.created_at,
         c.updated_at,
         u.name as user_name,
@@ -45,10 +45,11 @@ export async function GET(request: NextRequest) {
         ca.assigned_at,
         ca.notes as assignment_notes,
         ca.priority_level,
-        ew.name as assigned_worker_name
+        ew.name as assigned_worker_name,
+        ew.email as worker_email
       FROM complaints c
+      JOIN complaint_assignments ca ON c.id = ca.complaint_id AND ca.enterprise_id = $1
       JOIN users u ON c.user_id = u.id
-      LEFT JOIN complaint_assignments ca ON c.id = ca.complaint_id AND ca.enterprise_id = $1
       LEFT JOIN enterprise_workers ew ON ca.worker_id = ew.id
       ORDER BY 
         CASE c.status 
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PATCH - Update complaint status
+// PATCH - Update complaint status (only for complaints assigned to this enterprise)
 export async function PATCH(request: NextRequest) {
   try {
     const enterprise = verifyEnterpriseToken(request);
@@ -86,22 +87,36 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    // Update complaint status
+    // Verify complaint is assigned to this enterprise
+    const assignmentCheck = await query(
+      'SELECT 1 FROM complaint_assignments WHERE complaint_id = $1 AND enterprise_id = $2',
+      [complaintId, enterprise.enterpriseId]
+    );
+    if (assignmentCheck.rows.length === 0) {
+      return NextResponse.json(
+        { error: 'Complaint not assigned to your enterprise' },
+        { status: 403 }
+      );
+    }
+
+    // Get old status before updating
+    const oldStatusResult = await query(
+      'SELECT status FROM complaints WHERE id = $1',
+      [complaintId]
+    );
+    const oldStatus = oldStatusResult.rows[0]?.status || 'reported';
+
+    // Update complaint status in database
     await query(
-      'UPDATE complaints SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      'UPDATE complaints SET status = $1::complaint_status, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
       [status, complaintId]
     );
 
-    // Log status update
+    // Log status update in status_updates table
     await query(
-      `INSERT INTO status_updates (complaint_id, old_status, new_status, updated_by, update_notes, created_at)
-       SELECT $1, 
-              (SELECT status FROM complaints WHERE id = $1), 
-              $2, 
-              $3, 
-              $4, 
-              CURRENT_TIMESTAMP`,
-      [complaintId, status, enterprise.userId, notes || `Status updated to ${status}`]
+      `INSERT INTO status_updates (complaint_id, old_status, new_status, updated_by, notes, created_at)
+       VALUES ($1, $2::complaint_status, $3::complaint_status, $4, $5, CURRENT_TIMESTAMP)`,
+      [complaintId, oldStatus, status, enterprise.userId, notes || `Status updated to ${status}`]
     );
 
     // Create or update assignment if workerId provided
