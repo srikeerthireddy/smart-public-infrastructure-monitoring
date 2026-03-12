@@ -121,13 +121,13 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: 'Complaint not found' }, { status: 404 });
     }
 
-    // Create or update assignment in database (assigned_by stores admin id for audit)
+    // assigned_by: use null because admin is in admins table, not users (FK references users.id)
     await query(
       `INSERT INTO complaint_assignments (complaint_id, enterprise_id, worker_id, assigned_by, assigned_at, notes, priority_level)
-       VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, $5, $6)
+       VALUES ($1, $2, $3, NULL, CURRENT_TIMESTAMP, $4, $5)
        ON CONFLICT (complaint_id) 
-       DO UPDATE SET enterprise_id = $2, worker_id = $3, assigned_by = $4, assigned_at = CURRENT_TIMESTAMP, notes = $5, priority_level = $6`,
-      [complaintId, enterpriseId, workerId || null, admin.userId, notes || 'Assigned by admin', priority || 1]
+       DO UPDATE SET enterprise_id = $2, worker_id = $3, assigned_by = NULL, assigned_at = CURRENT_TIMESTAMP, notes = $4, priority_level = $5`,
+      [complaintId, enterpriseId, workerId || null, notes || 'Assigned by admin', priority || 1]
     );
 
     // Update complaint status to in_progress in database
@@ -145,8 +145,10 @@ export async function PATCH(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Assign complaint error:', error);
+    const msg = error.message || 'Internal server error';
+    const isFkError = msg.includes('foreign key') || msg.includes('assigned_by');
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: isFkError ? 'Database configuration error. Run: npm run db:fix-assign-fk' : msg },
       { status: error.message === 'No token provided' || error.message === 'Admin access required' ? 401 : 500 }
     );
   }

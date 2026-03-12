@@ -11,6 +11,7 @@
     "db:setup:neon": "node scripts/setup-neon-db.js",
     "db:fix-admin-email": "node scripts/fix-admin-email.js",
     "db:reset-admin-password": "node scripts/reset-admin-password.js",
+    "db:fix-assign-fk": "node scripts/fix-complaint-assignments-fk.js",
     "db:migrate": "node database/setup.sql",
     "db:seed": "node -e \"require('./scripts/setup-database.js').setupDatabase()\""
   },

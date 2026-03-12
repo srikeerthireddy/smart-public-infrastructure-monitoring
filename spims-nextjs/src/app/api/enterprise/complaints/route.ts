@@ -119,6 +119,26 @@ export async function PATCH(request: NextRequest) {
       [complaintId, oldStatus, status, enterprise.userId, notes || `Status updated to ${status}`]
     );
 
+    // Notify the complainant (user who reported) about the status update
+    const complaintRow = await query(
+      'SELECT c.user_id, c.title FROM complaints c WHERE c.id = $1',
+      [complaintId]
+    );
+    if (complaintRow.rows.length > 0) {
+      const complainantUserId = complaintRow.rows[0].user_id;
+      const title = complaintRow.rows[0].title;
+      const statusLabel = status === 'resolved' ? 'resolved' : status === 'in_progress' ? 'in progress' : status;
+      await query(
+        `INSERT INTO notifications (user_id, complaint_id, title, message, type) VALUES ($1, $2, $3, $4, 'status_update')`,
+        [
+          complainantUserId,
+          complaintId,
+          `Complaint "${title}" status updated`,
+          `Your complaint "${title}" is now ${statusLabel}.${status === 'resolved' ? ' Thank you for reporting!' : ''}`,
+        ]
+      );
+    }
+
     // Create or update assignment if workerId provided
     if (workerId) {
       await query(

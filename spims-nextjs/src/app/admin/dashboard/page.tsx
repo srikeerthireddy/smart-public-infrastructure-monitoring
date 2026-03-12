@@ -1234,15 +1234,18 @@ export default function AdminDashboard() {
             <select
               value={assigningEnterpriseId}
               onChange={(e) => setAssigningEnterpriseId(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4"
+              className="w-full border border-[#e5e5e5] rounded-xl px-4 py-3 text-sm mb-4 text-[#0a0a0a] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10"
             >
-              <option value="">Select enterprise...</option>
+              <option value="">Select an enterprise...</option>
               {enterprisesList.map((e) => (
                 <option key={e.id} value={e.id}>
                   {e.name} ({e.department})
                 </option>
               ))}
             </select>
+            {enterprisesList.length === 0 && (
+              <p className="text-sm text-[#525252] mb-2">No approved enterprises found. Approve enterprises in the Enterprises tab first.</p>
+            )}
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => { setAssignModalOpen(false); setSelectedComplaint(null); }}
