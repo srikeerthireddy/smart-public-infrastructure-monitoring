@@ -97,13 +97,15 @@ export default function AdminDashboard() {
   const [assigningEnterpriseId, setAssigningEnterpriseId] = useState('');
   const [assignLoading, setAssignLoading] = useState(false);
   const [assignError, setAssignError] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (showRefreshLoading = false) => {
     try {
+      if (showRefreshLoading) setIsRefreshing(true);
       const [statsResponse, enterprisesResponse, usersResponse, complaintsResponse] = await Promise.all([
         fetch('/api/admin/stats', { credentials: 'include' }),
         fetch('/api/admin/enterprises', { credentials: 'include' }),
@@ -138,6 +140,7 @@ export default function AdminDashboard() {
       console.error('Error fetching admin dashboard data:', error);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -290,7 +293,21 @@ export default function AdminDashboard() {
                 <p className="text-sm text-[#525252] mt-0.5">System Administration Panel</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link
+                href="/admin/settings"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/admin/profile"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                title="Profile"
+              >
+                <User className="w-5 h-5" />
+              </Link>
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-semibold text-[#0a0a0a]">System Administrator</p>
                 <p className="text-xs text-[#525252]">admin@spims.gov</p>
@@ -398,10 +415,11 @@ export default function AdminDashboard() {
                       <p className="text-sm text-gray-600 mt-1">Manage enterprise registrations and approvals</p>
                     </div>
                     <button 
-                      onClick={fetchDashboardData}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                      onClick={() => fetchDashboardData(true)}
+                      disabled={isRefreshing}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      Refresh
+                      {isRefreshing ? 'Refreshing...' : 'Refresh'}
                     </button>
                   </div>
                 </div>
@@ -555,10 +573,11 @@ export default function AdminDashboard() {
                           </select>
                         </div>
                         <button 
-                          onClick={fetchDashboardData}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                          onClick={() => fetchDashboardData(true)}
+                          disabled={isRefreshing}
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                         >
-                          Refresh
+                          {isRefreshing ? 'Refreshing...' : 'Refresh'}
                         </button>
                       </div>
                     </div>
@@ -1278,8 +1297,8 @@ export default function AdminDashboard() {
               {selectedComplaint.latitude && (
                 <p><strong>Location:</strong> {selectedComplaint.latitude}, {selectedComplaint.longitude}</p>
               )}
-              {selectedComplaint.reported_at && (
-                <p><strong>Reported:</strong> {new Date(selectedComplaint.reported_at).toLocaleString()}</p>
+              {(selectedComplaint.reported_at || selectedComplaint.created_at) && (
+                <p><strong>Reported:</strong> {new Date(selectedComplaint.reported_at || selectedComplaint.created_at).toLocaleString()}</p>
               )}
               {selectedComplaint.assigned_enterprise && (
                 <p><strong>Assigned to:</strong> {selectedComplaint.assigned_enterprise} {selectedComplaint.enterprise_department && `(${selectedComplaint.enterprise_department})`}</p>

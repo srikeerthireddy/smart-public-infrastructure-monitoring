@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { 
   AlertTriangle, 
@@ -14,58 +15,46 @@ import {
   Plus
 } from 'lucide-react';
 import { Complaint } from '@/types';
+import 'leaflet/dist/leaflet.css';
 
-export default function ComplaintsMap() {
+const ComplaintsMap = dynamic(
+  () => import('@/components/ComplaintsMap'),
+  { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center bg-gray-100"><p className="text-gray-600">Loading map...</p></div> }
+);
+
+export default function ComplaintsMapPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [statusFilter, setStatusFilter] = useState<'all' | 'reported' | 'in_progress' | 'resolved'>('all');
   const [showList, setShowList] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Mock data - replace with actual API call
-    // For new users, show community complaints as examples
-    const mockComplaints: Complaint[] = [
-      {
-        id: '1',
-        title: 'Street Light Not Working',
-        description: 'The street light has been out for 3 days.',
-        location: 'Main Road, Downtown',
-        latitude: 40.7128,
-        longitude: -74.0060,
-        status: 'in_progress',
-        user_id: 'community1',
-        created_at: new Date('2026-03-07'),
-        updated_at: new Date('2026-03-08'),
-        image_url: '/api/images/streetlight.jpg'
-      },
-      {
-        id: '2',
-        title: 'Pothole on Highway',
-        description: 'Large pothole causing damage to vehicles.',
-        location: 'Highway 101, Mile Marker 15',
-        latitude: 40.7589,
-        longitude: -73.9851,
-        status: 'reported',
-        user_id: 'community2',
-        created_at: new Date('2026-03-09'),
-        updated_at: new Date('2026-03-09')
-      },
-      {
-        id: '3',
-        title: 'Broken Water Pipe',
-        description: 'Water pipe burst near the park entrance.',
-        location: 'Central Park Entrance',
-        latitude: 40.7829,
-        longitude: -73.9654,
-        status: 'resolved',
-        user_id: 'community3',
-        created_at: new Date('2026-03-05'),
-        updated_at: new Date('2026-03-06'),
-        image_url: '/api/images/waterpipe.jpg'
+    const fetchComplaints = async () => {
+      try {
+        const res = await fetch('/api/complaints/map', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          const list = (data.complaints || []).map((c: any) => ({
+            ...c,
+            user_id: c.user_id || '',
+            created_at: c.created_at ? new Date(c.created_at) : new Date(),
+            updated_at: c.updated_at ? new Date(c.updated_at) : new Date(),
+          }));
+          setComplaints(list);
+        } else {
+          setLoadError('Failed to load complaints');
+          setComplaints([]);
+        }
+      } catch {
+        setLoadError('Failed to load complaints');
+        setComplaints([]);
+      } finally {
+        setIsLoading(false);
       }
-    ];
-
-    setComplaints(mockComplaints);
+    };
+    fetchComplaints();
   }, []);
 
   const getStatusIcon = (status: string) => {
@@ -147,40 +136,38 @@ export default function ComplaintsMap() {
 
       <div className="flex h-screen">
         {/* Map Container */}
-        <div className="flex-1 relative">
-          {/* Map Placeholder */}
-          <div className="w-full h-full bg-gray-200 relative overflow-hidden">
-            {/* Mock Map Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-green-100">
-              <div className="absolute inset-0 opacity-20">
-                {/* Grid pattern to simulate map */}
-                <div className="grid grid-cols-20 grid-rows-20 h-full w-full">
-                  {Array.from({ length: 400 }).map((_, i) => (
-                    <div key={i} className="border border-gray-300 border-opacity-30"></div>
-                  ))}
+        <div className="flex-1 relative min-h-[400px]">
+          {isLoading ? (
+            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading map...</p>
+              </div>
+            </div>
+          ) : loadError ? (
+            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+              <div className="text-center p-6">
+                <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+                <p className="text-gray-700 font-medium mb-2">{loadError}</p>
+                <p className="text-sm text-gray-500 mb-4">Complaints with location data will appear on the map. Report new issues with location to see them here.</p>
+                <div className="h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                  <span className="text-gray-500">Map unavailable</span>
                 </div>
               </div>
             </div>
-
-            {/* Map Markers */}
-            {filteredComplaints.map((complaint) => (
-              <div
-                key={complaint.id}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10"
-                style={{
-                  left: `${((complaint.longitude + 74.0060) * 1000) % 80 + 10}%`,
-                  top: `${((complaint.latitude - 40.7128) * 1000) % 60 + 20}%`
-                }}
-                onClick={() => setSelectedComplaint(complaint)}
-              >
-                <div className={`w-6 h-6 rounded-full border-2 border-white shadow-lg ${getMarkerColor(complaint.status)} flex items-center justify-center hover:scale-110 transition-transform`}>
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                </div>
+          ) : (
+            <>
+              <div className="w-full h-full">
+                <ComplaintsMap
+                  complaints={complaints}
+                  statusFilter={statusFilter}
+                  selectedComplaint={selectedComplaint}
+                  onSelectComplaint={setSelectedComplaint}
+                />
               </div>
-            ))}
 
             {/* Map Controls */}
-            <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 z-20">
+            <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-4 z-[1000]">
               <div className="flex items-center space-x-4 mb-4">
                 <div className="flex items-center space-x-2">
                   <Filter className="h-4 w-4 text-gray-600" />
@@ -222,9 +209,9 @@ export default function ComplaintsMap() {
               </div>
             </div>
 
-            {/* Selected Complaint Popup */}
-            {selectedComplaint && (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-6 max-w-sm z-30">
+            {/* Selected Complaint Sidebar - shown when list is visible */}
+            {selectedComplaint && showList && (
+              <div className="absolute bottom-4 left-4 right-4 md:right-auto md:w-80 bg-white rounded-lg shadow-xl p-6 z-[1000] max-h-64 overflow-y-auto">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center">
                     {getStatusIcon(selectedComplaint.status)}
@@ -237,25 +224,18 @@ export default function ComplaintsMap() {
                     ×
                   </button>
                 </div>
-                
                 <div className="space-y-3">
-                  <div>
-                    <span className={getStatusBadge(selectedComplaint.status)}>
-                      {selectedComplaint.status.replace('_', ' ').toUpperCase()}
-                    </span>
-                  </div>
-                  
+                  <span className={getStatusBadge(selectedComplaint.status)}>
+                    {selectedComplaint.status.replace('_', ' ').toUpperCase()}
+                  </span>
                   <p className="text-gray-600 text-sm">{selectedComplaint.description}</p>
-                  
                   <div className="flex items-center text-sm text-gray-500">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>{selectedComplaint.location}</span>
                   </div>
-                  
                   <div className="text-sm text-gray-500">
-                    Reported: {selectedComplaint.created_at.toLocaleDateString()}
+                    Reported: {new Date(selectedComplaint.created_at as any).toLocaleDateString()}
                   </div>
-                  
                   <div className="pt-3 border-t">
                     <Link
                       href={`/users-dashboard/complaints/${selectedComplaint.id}`}
@@ -267,7 +247,8 @@ export default function ComplaintsMap() {
                 </div>
               </div>
             )}
-          </div>
+            </>
+          )}
         </div>
 
         {/* Side Panel */}
@@ -323,13 +304,6 @@ export default function ComplaintsMap() {
         </Link>
       </div>
 
-      {/* Map Integration Note */}
-      <div className="absolute bottom-4 left-4 bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-sm z-20">
-        <h4 className="text-sm font-semibold text-blue-900 mb-2">Map Integration</h4>
-        <p className="text-xs text-blue-800">
-          This is a mock map view. In production, integrate with Google Maps API or similar service for real interactive maps.
-        </p>
-      </div>
     </div>
   );
 }

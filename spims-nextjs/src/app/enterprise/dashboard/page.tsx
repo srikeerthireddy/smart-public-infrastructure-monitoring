@@ -19,7 +19,8 @@ import {
   LogOut,
   Mail,
   Phone,
-  Eye
+  Eye,
+  Settings
 } from 'lucide-react';
 
 interface DashboardStats {
@@ -78,13 +79,15 @@ export default function EnterpriseDashboard() {
   const [filter, setFilter] = useState<'all' | 'reported' | 'in_progress' | 'resolved'>('all');
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (showRefreshLoading = false) => {
     try {
+      if (showRefreshLoading) setIsRefreshing(true);
       console.log('🔄 Fetching enterprise dashboard data...');
       
       // For now, let's use mock data since we need to implement the enterprise APIs
@@ -147,6 +150,7 @@ export default function EnterpriseDashboard() {
       });
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -232,7 +236,21 @@ export default function EnterpriseDashboard() {
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link
+                href="/enterprise/settings"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/enterprise/profile"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
+                title="Profile"
+              >
+                <User className="w-5 h-5" />
+              </Link>
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-semibold text-[#0a0a0a]">{user?.name}</p>
                 <p className="text-xs text-[#525252]">{user?.email}</p>
@@ -353,10 +371,11 @@ export default function EnterpriseDashboard() {
                   <option value="resolved">Resolved ({complaints.filter(c => c.status === 'resolved').length})</option>
                 </select>
                 <button 
-                  onClick={fetchDashboardData}
-                  className="px-4 py-2.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
+                  onClick={() => fetchDashboardData(true)}
+                  disabled={isRefreshing}
+                  className="px-4 py-2.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Refresh
+                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
                 </button>
               </div>
             </div>
@@ -503,6 +522,63 @@ export default function EnterpriseDashboard() {
           </div>
         </div>
       </main>
+
+      {/* View Details Modal */}
+      {showComplaintModal && selectedComplaint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{selectedComplaint.title}</h3>
+            <div className="space-y-3 text-sm">
+              <p><strong>Status:</strong> {selectedComplaint.status.replace('_', ' ')}</p>
+              <p><strong>Priority:</strong> {selectedComplaint.priority ?? 'N/A'}</p>
+              <p><strong>Description:</strong> {selectedComplaint.description || 'N/A'}</p>
+              <p><strong>Reported by:</strong> {selectedComplaint.user_name} ({selectedComplaint.user_email})</p>
+              {selectedComplaint.latitude && (
+                <p><strong>Location:</strong> {selectedComplaint.latitude}, {selectedComplaint.longitude}</p>
+              )}
+              {selectedComplaint.location && (
+                <p><strong>Address:</strong> {selectedComplaint.location}</p>
+              )}
+              <p><strong>Reported:</strong> {new Date(selectedComplaint.created_at).toLocaleString()}</p>
+              {selectedComplaint.assigned_worker_name && (
+                <p><strong>Assigned to:</strong> {selectedComplaint.assigned_worker_name}</p>
+              )}
+            </div>
+            <div className="mt-6 flex gap-2">
+              {selectedComplaint.status === 'reported' && (
+                <button
+                  onClick={() => {
+                    handleStatusUpdate(selectedComplaint.id, 'in_progress');
+                    setShowComplaintModal(false);
+                    setSelectedComplaint(null);
+                  }}
+                  className="px-4 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-700"
+                >
+                  Start Work
+                </button>
+              )}
+              {selectedComplaint.status === 'in_progress' && (
+                <button
+                  onClick={() => {
+                    handleStatusUpdate(selectedComplaint.id, 'resolved');
+                    setShowComplaintModal(false);
+                    setSelectedComplaint(null);
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700"
+                >
+                  Mark Resolved
+                </button>
+              )}
+              <button
+                onClick={() => { setShowComplaintModal(false); setSelectedComplaint(null); }}
+                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

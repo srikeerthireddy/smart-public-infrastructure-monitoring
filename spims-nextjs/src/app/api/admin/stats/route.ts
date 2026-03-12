@@ -33,12 +33,17 @@ export async function GET(request: NextRequest) {
     } catch (error) {
       console.log('Admin stats view not found, using direct queries');
       // Fallback to direct queries
-      const [publicUsers, enterpriseUsers, pendingEnterprises, totalComplaints, totalEnterprises] = await Promise.all([
+      const [publicUsers, enterpriseUsers, pendingEnterprises, totalComplaints, totalEnterprises, reportedComplaints, inProgressComplaints, resolvedComplaints, totalWorkers, totalAssignments] = await Promise.all([
         query('SELECT COUNT(*) as count FROM users WHERE role = $1', ['public']),
         query('SELECT COUNT(*) as count FROM users WHERE role = $1', ['enterprise']),
         query('SELECT COUNT(*) as count FROM users WHERE role = $1 AND approval_status = $2', ['enterprise', 'pending']),
         query('SELECT COUNT(*) as count FROM complaints'),
-        query('SELECT COUNT(*) as count FROM enterprises')
+        query('SELECT COUNT(*) as count FROM enterprises'),
+        query('SELECT COUNT(*) as count FROM complaints WHERE status = $1', ['reported']),
+        query('SELECT COUNT(*) as count FROM complaints WHERE status = $1', ['in_progress']),
+        query('SELECT COUNT(*) as count FROM complaints WHERE status = $1', ['resolved']),
+        query('SELECT COUNT(*) as count FROM enterprise_workers'),
+        query('SELECT COUNT(*) as count FROM complaint_assignments')
       ]);
       
       stats = {
@@ -48,12 +53,12 @@ export async function GET(request: NextRequest) {
         approved_enterprises: parseInt(enterpriseUsers.rows[0].count) - parseInt(pendingEnterprises.rows[0].count),
         rejected_enterprises: 0,
         total_complaints: parseInt(totalComplaints.rows[0].count),
-        pending_complaints: 0,
-        in_progress_complaints: 0,
-        resolved_complaints: 0,
+        pending_complaints: parseInt(reportedComplaints.rows[0].count),
+        in_progress_complaints: parseInt(inProgressComplaints.rows[0].count),
+        resolved_complaints: parseInt(resolvedComplaints.rows[0].count),
         total_enterprises: parseInt(totalEnterprises.rows[0].count),
-        total_workers: 0,
-        total_assignments: 0
+        total_workers: parseInt(totalWorkers.rows[0].count),
+        total_assignments: parseInt(totalAssignments.rows[0].count)
       };
     }
 
