@@ -36,28 +36,24 @@ const pool = new Pool({
 async function fix() {
   const client = await pool.connect();
   try {
-    await client.query(`
-      DO $$
-      BEGIN
-        IF EXISTS (
-          SELECT 1 FROM information_schema.table_constraints
-          WHERE constraint_name = 'complaint_assignments_assigned_by_fkey'
-          AND table_name = 'complaint_assignments'
-        ) THEN
-          ALTER TABLE complaint_assignments DROP CONSTRAINT complaint_assignments_assigned_by_fkey;
-          RAISE NOTICE 'Dropped complaint_assignments_assigned_by_fkey';
-        ELSIF EXISTS (
-          SELECT 1 FROM information_schema.table_constraints
-          WHERE constraint_name = 'fk_assignments_assigned_by'
-          AND table_name = 'complaint_assignments'
-        ) THEN
-          ALTER TABLE complaint_assignments DROP CONSTRAINT fk_assignments_assigned_by;
-          RAISE NOTICE 'Dropped fk_assignments_assigned_by';
-        ELSE
-          RAISE NOTICE 'No assigned_by FK found - nothing to do';
-        END IF;
-      END $$;
+    // Find and drop ANY foreign key on complaint_assignments.assigned_by
+    const fkResult = await client.query(`
+      SELECT tc.constraint_name
+      FROM information_schema.table_constraints tc
+      JOIN information_schema.key_column_usage kcu 
+        ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
+      WHERE tc.table_name = 'complaint_assignments'
+        AND tc.constraint_type = 'FOREIGN KEY'
+        AND kcu.column_name = 'assigned_by'
     `);
+    for (const row of fkResult.rows) {
+      const name = row.constraint_name;
+      await client.query(`ALTER TABLE complaint_assignments DROP CONSTRAINT IF EXISTS "${name}"`);
+      console.log('Dropped constraint:', name);
+    }
+    if (fkResult.rows.length === 0) {
+      console.log('No FK on assigned_by found.');
+    }
     try {
       await client.query('ALTER TABLE complaint_assignments ALTER COLUMN assigned_by DROP NOT NULL');
     } catch (_) {}

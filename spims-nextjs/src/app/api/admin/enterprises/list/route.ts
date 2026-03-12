@@ -13,9 +13,15 @@ function verifyAdminToken(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     verifyAdminToken(request);
-    const result = await query(
-      'SELECT id, name, department FROM enterprises WHERE is_active = true ORDER BY name'
-    );
+    // Only enterprises with at least one approved user (who can log in and work)
+    const result = await query(`
+      SELECT DISTINCT e.id, e.name, e.department
+      FROM enterprises e
+      JOIN users u ON u.enterprise_id = e.id AND u.role = 'enterprise'
+      WHERE e.is_active = true
+        AND u.approval_status = 'approved'
+      ORDER BY e.name
+    `);
     return NextResponse.json({ enterprises: result.rows });
   } catch (error: any) {
     return NextResponse.json(
