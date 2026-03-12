@@ -97,15 +97,13 @@ export default function AdminDashboard() {
   const [assigningEnterpriseId, setAssigningEnterpriseId] = useState('');
   const [assignLoading, setAssignLoading] = useState(false);
   const [assignError, setAssignError] = useState('');
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async (showRefreshLoading = false) => {
+  const fetchDashboardData = async () => {
     try {
-      if (showRefreshLoading) setIsRefreshing(true);
       const [statsResponse, enterprisesResponse, usersResponse, complaintsResponse] = await Promise.all([
         fetch('/api/admin/stats', { credentials: 'include' }),
         fetch('/api/admin/enterprises', { credentials: 'include' }),
@@ -140,7 +138,6 @@ export default function AdminDashboard() {
       console.error('Error fetching admin dashboard data:', error);
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
     }
   };
 
@@ -414,13 +411,6 @@ export default function AdminDashboard() {
                       <h2 className="text-lg font-semibold text-gray-900">Enterprise Approvals</h2>
                       <p className="text-sm text-gray-600 mt-1">Manage enterprise registrations and approvals</p>
                     </div>
-                    <button 
-                      onClick={() => fetchDashboardData(true)}
-                      disabled={isRefreshing}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                      {isRefreshing ? 'Refreshing...' : 'Refresh'}
-                    </button>
                   </div>
                 </div>
                 <div className="p-6">
@@ -572,13 +562,6 @@ export default function AdminDashboard() {
                             <option>Resolved</option>
                           </select>
                         </div>
-                        <button 
-                          onClick={() => fetchDashboardData(true)}
-                          disabled={isRefreshing}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                        >
-                          {isRefreshing ? 'Refreshing...' : 'Refresh'}
-                        </button>
                       </div>
                     </div>
                   </div>

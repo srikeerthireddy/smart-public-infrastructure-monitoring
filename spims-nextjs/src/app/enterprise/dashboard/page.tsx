@@ -79,15 +79,13 @@ export default function EnterpriseDashboard() {
   const [filter, setFilter] = useState<'all' | 'reported' | 'in_progress' | 'resolved'>('all');
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [showComplaintModal, setShowComplaintModal] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async (showRefreshLoading = false) => {
+  const fetchDashboardData = async () => {
     try {
-      if (showRefreshLoading) setIsRefreshing(true);
       console.log('🔄 Fetching enterprise dashboard data...');
       
       // For now, let's use mock data since we need to implement the enterprise APIs
@@ -150,7 +148,6 @@ export default function EnterpriseDashboard() {
       });
     } finally {
       setIsLoading(false);
-      setIsRefreshing(false);
     }
   };
 
@@ -370,13 +367,6 @@ export default function EnterpriseDashboard() {
                   <option value="in_progress">In Progress ({complaints.filter(c => c.status === 'in_progress').length})</option>
                   <option value="resolved">Resolved ({complaints.filter(c => c.status === 'resolved').length})</option>
                 </select>
-                <button 
-                  onClick={() => fetchDashboardData(true)}
-                  disabled={isRefreshing}
-                  className="px-4 py-2.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
-                </button>
               </div>
             </div>
           </div>
