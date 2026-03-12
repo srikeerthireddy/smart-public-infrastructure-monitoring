@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Mail, Lock, ArrowLeft } from 'lucide-react';
 
 export default function Login() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -91,116 +91,91 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{background: 'linear-gradient(135deg, #e0f2fe 0%, #f1f5f9 25%, #faf5ff 50%, #f0f9ff 75%, #e8f5e8 100%)'}}>
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <Link href="/" className="inline-flex items-center group">
-            <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-4 rounded-2xl shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
-              <AlertTriangle className="h-12 w-12 text-white" />
-            </div>
-            <h1 className="ml-4 text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">SPIMS</h1>
-          </Link>
-          <h2 className="mt-8 text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
-            Welcome Back!
-          </h2>
-          <p className="mt-3 text-lg text-gray-700 font-medium">
-            Sign in to continue to your dashboard
-          </p>
-          <p className="mt-2 text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link href="/users-dashboard/auth/register" className="font-bold text-blue-600 hover:text-purple-600 transition-colors duration-200 hover:underline">
-              Create one here
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <Link 
+          href="/" 
+          className="inline-flex items-center text-sm font-medium text-neutral-600 hover:text-neutral-900 mb-8 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Link>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+          <div className="px-8 pt-10 pb-6 text-center border-b border-neutral-100">
+            <Link href="/" className="inline-flex items-center justify-center gap-3 mb-6">
+              <div className="w-14 h-14 bg-neutral-900 rounded-xl flex items-center justify-center">
+                <AlertTriangle className="w-7 h-7 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-neutral-900">SPIMS</span>
             </Link>
-          </p>
-        </div>
-
-        {/* Success Message */}
-        {showSuccessMessage && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center">
-              <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-              <p className="text-green-800 font-medium">Account created successfully!</p>
-            </div>
-            <p className="text-green-700 text-sm mt-1">Please sign in with your credentials.</p>
+            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Welcome Back</h1>
+            <p className="text-sm text-neutral-600 mt-1">Sign in to continue to your dashboard</p>
           </div>
-        )}
 
-        {/* Login Form */}
-        <div className="bg-white/95 backdrop-blur-md py-8 px-8 shadow-xl rounded-2xl border border-white/50 ring-1 ring-gray-200/50">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                className="block w-full px-4 py-3 border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-400 bg-gray-50/50 hover:bg-white hover:border-gray-300"
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
+          <div className="p-8">
+            {showSuccessMessage && (
+              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-emerald-900">Account created successfully!</p>
+                  <p className="text-xs text-emerald-700 mt-0.5">Please sign in with your credentials.</p>
+                </div>
+              </div>
+            )}
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-800 mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                className="block w-full px-4 py-3 border-2 border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-400 bg-gray-50/50 hover:bg-white hover:border-gray-300"
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-
-            {/* Remember me and Forgot password */}
-            <div className="flex items-center justify-between pt-1">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded shadow-sm"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm font-medium text-gray-700">
-                  Remember me
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold text-neutral-900 mb-2">
+                  Email Address
                 </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
               </div>
-              <div className="text-sm">
-                <a href="#" className="font-semibold text-blue-600 hover:text-purple-600 transition-colors duration-200 hover:underline">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
 
-            {/* Submit Button */}
-            <div className="pt-2">
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold text-neutral-900 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    placeholder="Enter your password"
+                    required
+                  />
+                </div>
+              </div>
+
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-3 focus:ring-blue-500/30 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl"
+                className="w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 transition-all"
               >
-                <span className="relative">Sign In to Dashboard</span>
+                Sign In to Dashboard
               </button>
-            </div>
-          </form>
-        </div>
+            </form>
 
-        {/* Footer */}
-        <div className="text-center">
-          <Link 
-            href="/"
-            className="inline-flex items-center text-base font-semibold text-gray-600 hover:text-blue-600 transition-colors duration-200 hover:underline"
-          >
-            ← Back to Home
-          </Link>
+            <p className="mt-6 text-center text-sm text-neutral-600">
+              Don&apos;t have an account?{' '}
+              <Link href="/users-dashboard/auth/register" className="font-semibold text-neutral-900 hover:underline">
+                Create one here
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

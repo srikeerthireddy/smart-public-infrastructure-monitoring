@@ -183,10 +183,10 @@ export default function EnterpriseDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'reported': return 'bg-red-100 text-red-800 border-red-200';
-      case 'in_progress': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'resolved': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'reported': return 'bg-red-50 text-red-800 border-red-200';
+      case 'in_progress': return 'bg-amber-50 text-amber-800 border-amber-200';
+      case 'resolved': return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+      default: return 'bg-neutral-100 text-neutral-800 border-neutral-200';
     }
   };
 
@@ -205,43 +205,41 @@ export default function EnterpriseDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+          <div className="w-12 h-12 border-2 border-neutral-300 border-t-neutral-900 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-sm font-medium text-neutral-600">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-neutral-50">
+      <header className="bg-white border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="flex justify-between items-center py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 bg-neutral-900 rounded-xl flex items-center justify-center">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Enterprise Dashboard</h1>
+                <h1 className="text-xl font-bold text-neutral-900">Enterprise Dashboard</h1>
                 {user && (
-                  <p className="text-sm text-gray-600">
-                    {user.enterprise.name} - {user.enterprise.department}
+                  <p className="text-sm text-neutral-600 mt-0.5">
+                    {user.enterprise.name} · {user.enterprise.department}
                   </p>
                 )}
               </div>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-600">{user?.email}</p>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
+                <p className="text-xs text-neutral-600">{user?.email}</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
                 title="Logout"
               >
                 <LogOut className="w-5 h-5" />
@@ -253,127 +251,110 @@ export default function EnterpriseDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Complaints */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Total Complaints</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalComplaints}</p>
+                <p className="text-sm font-medium text-neutral-600 mb-1">Total Complaints</p>
+                <p className="text-2xl font-bold text-neutral-900">{stats.totalComplaints}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <ClipboardList className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-neutral-100 rounded-xl flex items-center justify-center">
+                <ClipboardList className="w-6 h-6 text-neutral-700" />
               </div>
             </div>
           </div>
-
-          {/* Pending */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Pending</p>
+                <p className="text-sm font-medium text-neutral-600 mb-1">Pending</p>
                 <p className="text-2xl font-bold text-red-600">{stats.pendingComplaints}</p>
               </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
                 <AlertTriangle className="w-6 h-6 text-red-600" />
               </div>
             </div>
           </div>
-
-          {/* In Progress */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">In Progress</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.inProgressComplaints}</p>
+                <p className="text-sm font-medium text-neutral-600 mb-1">In Progress</p>
+                <p className="text-2xl font-bold text-amber-600">{stats.inProgressComplaints}</p>
               </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-yellow-600" />
+              <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+                <Clock className="w-6 h-6 text-amber-600" />
               </div>
             </div>
           </div>
-
-          {/* Resolved */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Resolved</p>
-                <p className="text-2xl font-bold text-green-600">{stats.resolvedComplaints}</p>
+                <p className="text-sm font-medium text-neutral-600 mb-1">Resolved</p>
+                <p className="text-2xl font-bold text-emerald-600">{stats.resolvedComplaints}</p>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-emerald-600" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm mb-8">
+          <h2 className="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               href="/enterprise/workers"
-              className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+              className="flex items-center p-4 bg-neutral-50 rounded-xl border border-neutral-200/80 hover:bg-neutral-100 hover:border-neutral-300 transition-all"
             >
-              <Users className="w-8 h-8 text-blue-600 mr-3" />
+              <Users className="w-8 h-8 text-neutral-700 mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">Manage Workers</h3>
-                <p className="text-sm text-gray-600">{stats.activeWorkers} active workers</p>
+                <h3 className="font-semibold text-neutral-900">Manage Workers</h3>
+                <p className="text-sm text-neutral-600">{stats.activeWorkers} active workers</p>
               </div>
             </Link>
-
             <Link
               href="/enterprise/assignments"
-              className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+              className="flex items-center p-4 bg-neutral-50 rounded-xl border border-neutral-200/80 hover:bg-neutral-100 hover:border-neutral-300 transition-all"
             >
-              <ClipboardList className="w-8 h-8 text-green-600 mr-3" />
+              <ClipboardList className="w-8 h-8 text-neutral-700 mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">Assign Tasks</h3>
-                <p className="text-sm text-gray-600">Assign complaints to workers</p>
+                <h3 className="font-semibold text-neutral-900">Assign Tasks</h3>
+                <p className="text-sm text-neutral-600">Assign complaints to workers</p>
               </div>
             </Link>
-
             <Link
               href="/enterprise/reports"
-              className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+              className="flex items-center p-4 bg-neutral-50 rounded-xl border border-neutral-200/80 hover:bg-neutral-100 hover:border-neutral-300 transition-all"
             >
-              <ClipboardList className="w-8 h-8 text-purple-600 mr-3" />
+              <ClipboardList className="w-8 h-8 text-neutral-700 mr-4" />
               <div>
-                <h3 className="font-medium text-gray-900">View Reports</h3>
-                <p className="text-sm text-gray-600">Performance analytics</p>
+                <h3 className="font-semibold text-neutral-900">View Reports</h3>
+                <p className="text-sm text-neutral-600">Performance analytics</p>
               </div>
             </Link>
           </div>
         </div>
 
-        {/* Enhanced Complaints Management */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+          <div className="p-6 border-b border-neutral-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">User Complaints Management</h2>
-                <p className="text-sm text-gray-600 mt-1">View and manage complaints from public users</p>
+                <h2 className="text-lg font-semibold text-neutral-900">Complaints Management</h2>
+                <p className="text-sm text-neutral-600 mt-0.5">View and manage public complaints</p>
               </div>
-              
-              {/* Filters and Actions */}
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Filter className="w-4 h-4 text-gray-400" />
-                  <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value as any)}
-                    className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="all">All Status ({filteredComplaints.length})</option>
-                    <option value="reported">Reported ({complaints.filter(c => c.status === 'reported').length})</option>
-                    <option value="in_progress">In Progress ({complaints.filter(c => c.status === 'in_progress').length})</option>
-                    <option value="resolved">Resolved ({complaints.filter(c => c.status === 'resolved').length})</option>
-                  </select>
-                </div>
+              <div className="flex items-center gap-3">
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value as any)}
+                  className="text-sm border border-neutral-200 rounded-xl px-4 py-2.5 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                >
+                  <option value="all">All ({filteredComplaints.length})</option>
+                  <option value="reported">Reported ({complaints.filter(c => c.status === 'reported').length})</option>
+                  <option value="in_progress">In Progress ({complaints.filter(c => c.status === 'in_progress').length})</option>
+                  <option value="resolved">Resolved ({complaints.filter(c => c.status === 'resolved').length})</option>
+                </select>
                 <button 
                   onClick={fetchDashboardData}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                  className="px-4 py-2.5 bg-neutral-900 text-white rounded-xl text-sm font-medium hover:bg-neutral-800 transition-colors"
                 >
                   Refresh
                 </button>

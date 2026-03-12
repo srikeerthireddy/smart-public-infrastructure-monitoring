@@ -88,6 +88,15 @@ export default function AdminDashboard() {
   const [allComplaints, setAllComplaints] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'complaints' | 'enterprises' | 'users' | 'analytics'>('overview');
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [selectedComplaint, setSelectedComplaint] = useState<any>(null);
+  const [enterprisesList, setEnterprisesList] = useState<{ id: string; name: string; department: string }[]>([]);
+  const [statusUpdates, setStatusUpdates] = useState<any[]>([]);
+  const [assigningEnterpriseId, setAssigningEnterpriseId] = useState('');
+  const [assignLoading, setAssignLoading] = useState(false);
+  const [assignError, setAssignError] = useState('');
 
   useEffect(() => {
     fetchDashboardData();
@@ -96,10 +105,10 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       const [statsResponse, enterprisesResponse, usersResponse, complaintsResponse] = await Promise.all([
-        fetch('/api/admin/stats'),
-        fetch('/api/admin/enterprises'),
-        fetch('/api/admin/users'),
-        fetch('/api/admin/complaints')
+        fetch('/api/admin/stats', { credentials: 'include' }),
+        fetch('/api/admin/enterprises', { credentials: 'include' }),
+        fetch('/api/admin/users', { credentials: 'include' }),
+        fetch('/api/admin/complaints', { credentials: 'include' })
       ]);
 
       if (statsResponse.ok) {
@@ -155,6 +164,75 @@ export default function AdminDashboard() {
     }
   };
 
+  const openAssignModal = async (complaint: any) => {
+    setSelectedComplaint(complaint);
+    setAssignModalOpen(true);
+    setAssignError('');
+    setAssigningEnterpriseId('');
+    try {
+      const res = await fetch('/api/admin/enterprises/list', { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setEnterprisesList(data.enterprises || []);
+      }
+    } catch (e) {
+      setAssignError('Failed to load enterprises');
+    }
+  };
+
+  const handleAssignEnterprise = async () => {
+    if (!selectedComplaint || !assigningEnterpriseId) {
+      setAssignError('Please select an enterprise');
+      return;
+    }
+    setAssignLoading(true);
+    setAssignError('');
+    try {
+      const res = await fetch('/api/admin/complaints', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          complaintId: selectedComplaint.id,
+          enterpriseId: assigningEnterpriseId,
+          notes: 'Assigned by admin'
+        }),
+      });
+      if (res.ok) {
+        setAssignModalOpen(false);
+        setSelectedComplaint(null);
+        fetchDashboardData();
+      } else {
+        const err = await res.json();
+        setAssignError(err.error || 'Assignment failed');
+      }
+    } catch (e) {
+      setAssignError('Assignment failed');
+    } finally {
+      setAssignLoading(false);
+    }
+  };
+
+  const openHistoryModal = async (complaint: any) => {
+    setSelectedComplaint(complaint);
+    setHistoryModalOpen(true);
+    setStatusUpdates([]);
+    try {
+      const res = await fetch(`/api/admin/complaints/status-updates/${complaint.id}`, { credentials: 'include' });
+      if (res.ok) {
+        const data = await res.json();
+        setStatusUpdates(data.statusUpdates || []);
+      }
+    } catch (e) {
+      console.error('Failed to load history:', e);
+    }
+  };
+
+  const openDetailsModal = (complaint: any) => {
+    setSelectedComplaint(complaint);
+    setDetailsModalOpen(true);
+  };
+
   const handleUserAction = async (userId: string, action: 'activate' | 'deactivate' | 'verify_email') => {
     try {
       const response = await fetch('/api/admin/users', {
@@ -189,39 +267,37 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading admin dashboard...</p>
+          <div className="w-12 h-12 border-2 border-neutral-300 border-t-neutral-900 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-sm font-medium text-neutral-600">Loading admin dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-neutral-50">
+      <header className="bg-white border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-600 rounded-lg flex items-center justify-center">
+          <div className="flex justify-between items-center py-5">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 bg-neutral-900 rounded-xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">System Administration Panel</p>
+                <h1 className="text-xl font-bold text-neutral-900">Admin Dashboard</h1>
+                <p className="text-sm text-neutral-600 mt-0.5">System Administration Panel</p>
               </div>
             </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">System Administrator</p>
-                <p className="text-xs text-gray-600">admin@gmail.com</p>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-semibold text-neutral-900">System Administrator</p>
+                <p className="text-xs text-neutral-600">admin@spims.gov</p>
               </div>
               <button
                 onClick={handleLogout}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
                 title="Logout"
               >
                 <LogOut className="w-5 h-5" />
@@ -231,10 +307,9 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+          <nav className="flex gap-1">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'complaints', label: 'Complaints', icon: ClipboardList },
@@ -245,10 +320,10 @@ export default function AdminDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-red-500 text-red-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-neutral-900 text-neutral-900'
+                    : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -263,58 +338,50 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'overview' && (
           <>
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {/* Total Users */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Total Users</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm font-medium text-neutral-600 mb-1">Total Users</p>
+                    <p className="text-2xl font-bold text-neutral-900">
                       {(stats?.total_public_users || 0) + (stats?.total_enterprise_users || 0)}
                     </p>
                   </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-neutral-100 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-neutral-700" />
                   </div>
                 </div>
               </div>
-
-              {/* Pending Approvals */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Pending Approvals</p>
-                    <p className="text-2xl font-bold text-orange-600">{stats?.pending_enterprises || 0}</p>
+                    <p className="text-sm font-medium text-neutral-600 mb-1">Pending Approvals</p>
+                    <p className="text-2xl font-bold text-amber-600">{stats?.pending_enterprises || 0}</p>
                   </div>
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center">
+                    <Clock className="w-6 h-6 text-amber-600" />
                   </div>
                 </div>
               </div>
-
-              {/* Total Complaints */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Total Complaints</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats?.total_complaints || 0}</p>
+                    <p className="text-sm font-medium text-neutral-600 mb-1">Total Complaints</p>
+                    <p className="text-2xl font-bold text-neutral-900">{stats?.total_complaints || 0}</p>
                   </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <ClipboardList className="w-6 h-6 text-purple-600" />
+                  <div className="w-12 h-12 bg-neutral-100 rounded-xl flex items-center justify-center">
+                    <ClipboardList className="w-6 h-6 text-neutral-700" />
                   </div>
                 </div>
               </div>
-
-              {/* System Health */}
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+              <div className="bg-white rounded-2xl p-6 border border-neutral-200/80 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">System Health</p>
-                    <p className="text-2xl font-bold text-green-600">98%</p>
+                    <p className="text-sm font-medium text-neutral-600 mb-1">System Health</p>
+                    <p className="text-2xl font-bold text-emerald-600">98%</p>
                   </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <Activity className="w-6 h-6 text-green-600" />
+                  <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center">
+                    <Activity className="w-6 h-6 text-emerald-600" />
                   </div>
                 </div>
               </div>
@@ -668,17 +735,26 @@ export default function AdminDashboard() {
                                 
                                 {/* Action Buttons */}
                                 <div className="ml-6 flex flex-col space-y-2">
-                                  <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                                  <button
+                                    onClick={() => openDetailsModal(complaint)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                                  >
                                     View Details
                                   </button>
                                   
                                   {!complaint.assigned_enterprise && (
-                                    <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                                    <button
+                                      onClick={() => openAssignModal(complaint)}
+                                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
+                                    >
                                       Assign Enterprise
                                     </button>
                                   )}
                                   
-                                  <button className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors">
+                                  <button
+                                    onClick={() => openHistoryModal(complaint)}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
+                                  >
                                     View History
                                   </button>
                                 </div>
@@ -1143,6 +1219,110 @@ export default function AdminDashboard() {
           </div>
         )}
       </main>
+
+      {/* Assign Enterprise Modal */}
+      {assignModalOpen && selectedComplaint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Assign Enterprise</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Assign &quot;{selectedComplaint.title}&quot; to an enterprise
+            </p>
+            {assignError && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg">{assignError}</div>
+            )}
+            <select
+              value={assigningEnterpriseId}
+              onChange={(e) => setAssigningEnterpriseId(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-4"
+            >
+              <option value="">Select enterprise...</option>
+              {enterprisesList.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.name} ({e.department})
+                </option>
+              ))}
+            </select>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => { setAssignModalOpen(false); setSelectedComplaint(null); }}
+                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAssignEnterprise}
+                disabled={assignLoading}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+              >
+                {assignLoading ? 'Assigning...' : 'Assign'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Details Modal */}
+      {detailsModalOpen && selectedComplaint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{selectedComplaint.title}</h3>
+            <div className="space-y-3 text-sm">
+              <p><strong>Status:</strong> {selectedComplaint.status}</p>
+              <p><strong>Priority:</strong> {selectedComplaint.priority}</p>
+              <p><strong>Description:</strong> {selectedComplaint.description || 'N/A'}</p>
+              <p><strong>Reported by:</strong> {selectedComplaint.user_name || selectedComplaint.reporter_name} ({selectedComplaint.user_email || selectedComplaint.reporter_email})</p>
+              {selectedComplaint.latitude && (
+                <p><strong>Location:</strong> {selectedComplaint.latitude}, {selectedComplaint.longitude}</p>
+              )}
+              {selectedComplaint.reported_at && (
+                <p><strong>Reported:</strong> {new Date(selectedComplaint.reported_at).toLocaleString()}</p>
+              )}
+              {selectedComplaint.assigned_enterprise && (
+                <p><strong>Assigned to:</strong> {selectedComplaint.assigned_enterprise} {selectedComplaint.enterprise_department && `(${selectedComplaint.enterprise_department})`}</p>
+              )}
+            </div>
+            <button
+              onClick={() => { setDetailsModalOpen(false); setSelectedComplaint(null); }}
+              className="mt-6 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* View History Modal */}
+      {historyModalOpen && selectedComplaint && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Status History</h3>
+            <p className="text-sm text-gray-600 mb-4">{selectedComplaint.title}</p>
+            <div className="space-y-2">
+              {statusUpdates.length === 0 ? (
+                <p className="text-gray-500 text-sm">No status updates yet.</p>
+              ) : (
+                statusUpdates.map((u: any, i: number) => (
+                  <div key={i} className="p-3 bg-gray-50 rounded-lg text-sm">
+                    <p><strong>{u.old_status}</strong> → <strong>{u.new_status}</strong></p>
+                    {u.notes && <p className="text-gray-600 mt-1">{u.notes}</p>}
+                    <p className="text-gray-500 mt-1 text-xs">
+                      {u.created_at ? new Date(u.created_at).toLocaleString() : ''}
+                      {u.updated_by_name && ` by ${u.updated_by_name}`}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+            <button
+              onClick={() => { setHistoryModalOpen(false); setSelectedComplaint(null); }}
+              className="mt-6 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

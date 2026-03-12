@@ -5,30 +5,26 @@ import { Building2, Users, ClipboardCheck, Shield, ArrowRight, CheckCircle } fro
 
 export default function EnterpriseLanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200/50">
+    <div className="min-h-screen bg-neutral-50">
+      <header className="bg-white border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="flex justify-between items-center py-5">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-neutral-900 rounded-xl flex items-center justify-center">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">SPIMS Enterprise</h1>
-                <p className="text-xs text-gray-600">Infrastructure Management Portal</p>
+                <h1 className="text-xl font-bold text-neutral-900">SPIMS Enterprise</h1>
+                <p className="text-xs text-neutral-600 mt-0.5">Infrastructure Management Portal</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/"
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
-              >
+            <div className="flex items-center gap-4">
+              <Link href="/" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors">
                 Public Portal
               </Link>
               <Link
                 href="/enterprise/auth/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                className="bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-neutral-800 transition-colors"
               >
                 Enterprise Login
               </Link>
@@ -41,15 +37,15 @@ export default function EnterpriseLanding() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-8">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-800 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 bg-neutral-100 rounded-full text-neutral-800 text-sm font-medium mb-6">
               <Shield className="w-4 h-4 mr-2" />
               Government & Enterprise Portal
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-6 leading-tight">
               Manage Public Infrastructure
-              <span className="block text-blue-600">Efficiently & Effectively</span>
+              <span className="block text-neutral-700">Efficiently & Effectively</span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+            <p className="text-lg text-neutral-600 max-w-3xl mx-auto mb-8 leading-relaxed">
               Enterprise dashboard for government teams and organizations to manage public complaints, 
               assign workers, track progress, and ensure timely resolution of infrastructure issues.
             </p>
@@ -58,14 +54,14 @@ export default function EnterpriseLanding() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/enterprise/auth/login"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center"
+              className="bg-neutral-900 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-neutral-800 transition-all flex items-center"
             >
-              Access Enterprise Dashboard
+              Access Dashboard
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
               href="/enterprise/auth/register"
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold border-2 border-blue-600 hover:bg-blue-50 transition-all duration-200 flex items-center"
+              className="bg-white text-neutral-900 px-8 py-3.5 rounded-xl font-semibold border-2 border-neutral-300 hover:bg-neutral-50 transition-all flex items-center"
             >
               Register Enterprise
             </Link>

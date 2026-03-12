@@ -55,118 +55,107 @@ export default function EnterpriseLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-            <Building2 className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Enterprise Login</h1>
-          <p className="text-sm text-gray-600">Access your infrastructure management dashboard</p>
-        </div>
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <Link 
+          href="/enterprise" 
+          className="inline-flex items-center text-sm font-medium text-neutral-600 hover:text-neutral-900 mb-8 transition-colors"
+        >
+          ← Back to Enterprise Portal
+        </Link>
 
-        {/* Success Message */}
-        {message && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center">
-            <CheckCircle className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0" />
-            <p className="text-sm text-blue-800">{message}</p>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
-            <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0" />
-            <p className="text-sm text-red-800">{error}</p>
-          </div>
-        )}
-
-        {/* Login Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Enterprise Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
-                  placeholder="enterprise@department.gov"
-                />
-              </div>
+        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+          <div className="px-8 pt-10 pb-6 text-center border-b border-neutral-100">
+            <div className="mx-auto w-14 h-14 bg-neutral-900 rounded-xl flex items-center justify-center mb-5">
+              <Building2 className="w-7 h-7 text-white" />
             </div>
+            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Enterprise Login</h1>
+            <p className="text-sm text-neutral-600 mt-1">Infrastructure Management Dashboard</p>
+          </div>
 
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+          <div className="p-8">
+            {message && (
+              <div className="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm font-medium text-emerald-800">{message}</p>
               </div>
-            </div>
+            )}
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {isLoading ? 'Signing In...' : 'Sign In to Dashboard'}
-            </button>
-          </form>
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm font-medium text-red-800">{error}</p>
+              </div>
+            )}
 
-          {/* Links */}
-          <div className="mt-6 text-center space-y-3">
-            <p className="text-sm text-gray-600">
-              Don't have an enterprise account?{' '}
-              <Link href="/enterprise/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold text-neutral-900 mb-2">
+                  Enterprise Email
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    placeholder="enterprise@department.gov"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold text-neutral-900 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Signing In...' : 'Sign In to Dashboard'}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-neutral-600">
+              Don&apos;t have an account?{' '}
+              <Link href="/enterprise/auth/register" className="font-semibold text-neutral-900 hover:underline">
                 Register here
               </Link>
             </p>
-            <div className="border-t border-gray-200 pt-3">
-              <Link 
-                href="/enterprise" 
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                ← Back to Enterprise Portal
-              </Link>
-            </div>
-          </div>
-        </div>
 
-        {/* Admin Note */}
-        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-start">
-            <AlertCircle className="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-yellow-800 mb-1">Admin Approval Required</h3>
-              <p className="text-xs text-yellow-700">
-                All enterprise accounts require admin approval before accessing the dashboard. 
-                You will be notified once your account is approved.
-              </p>
+            <div className="mt-6 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-neutral-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-900 mb-0.5">Admin Approval Required</h3>
+                  <p className="text-xs text-neutral-600 leading-relaxed">
+                    Enterprise accounts require admin approval before dashboard access.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

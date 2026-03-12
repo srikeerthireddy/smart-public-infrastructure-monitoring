@@ -72,39 +72,37 @@ export default function EnterpriseRegister() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full">
-          <div className="text-center mb-8">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-              <CheckCircle className="w-8 h-8 text-white" />
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-16 px-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+            <div className="p-8 text-center">
+              <div className="mx-auto w-14 h-14 bg-emerald-600 rounded-xl flex items-center justify-center mb-5">
+                <CheckCircle className="w-7 h-7 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold text-neutral-900 mb-1">Registration Submitted</h1>
+              <p className="text-sm text-neutral-600">Your enterprise account is pending admin approval</p>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Registration Submitted!</h1>
-            <p className="text-sm text-gray-600">Your enterprise account is pending admin approval</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-            <div className="text-center space-y-4">
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                <h3 className="font-medium text-green-800 mb-2">What happens next?</h3>
-                <ul className="text-sm text-green-700 space-y-1 text-left">
-                  <li>• Admin will review your enterprise registration</li>
-                  <li>• You'll receive an email notification about approval status</li>
-                  <li>• Once approved, you can access the enterprise dashboard</li>
+            <div className="px-8 pb-8 space-y-4">
+              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+                <h3 className="text-sm font-semibold text-neutral-900 mb-2">What happens next?</h3>
+                <ul className="text-sm text-neutral-600 space-y-1.5">
+                  <li>• Admin will review your registration</li>
+                  <li>• You&apos;ll receive an email about approval status</li>
+                  <li>• Once approved, you can access the dashboard</li>
                 </ul>
               </div>
-
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <Link
                   href="/enterprise/auth/login"
-                  className="block w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm"
+                  className="block w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 transition-colors text-center"
                 >
-                  Go to Login Page
+                  Go to Login
                 </Link>
                 <Link
                   href="/enterprise"
-                  className="block w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm"
+                  className="block w-full border border-neutral-200 text-neutral-900 py-3 px-4 rounded-xl font-medium hover:bg-neutral-50 transition-colors text-center"
                 >
-                  Back to Enterprise Portal
+                  Back to Portal
                 </Link>
               </div>
             </div>
@@ -115,80 +113,68 @@ export default function EnterpriseRegister() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-neutral-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-            <Building2 className="w-8 h-8 text-white" />
+          <Link href="/enterprise" className="inline-flex items-center text-sm font-medium text-neutral-600 hover:text-neutral-900 mb-6">
+            ← Back to Enterprise Portal
+          </Link>
+          <div className="mx-auto w-14 h-14 bg-neutral-900 rounded-xl flex items-center justify-center mb-5">
+            <Building2 className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Register Enterprise</h1>
-          <p className="text-sm text-gray-600">Create an enterprise account for your government department</p>
+          <h1 className="text-2xl font-bold text-neutral-900 tracking-tight mb-1">Register Enterprise</h1>
+          <p className="text-sm text-neutral-600">Create an account for your government department</p>
         </div>
 
-        {/* Error Message */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
-            <AlertCircle className="w-5 h-5 text-red-600 mr-3 flex-shrink-0" />
-            <p className="text-sm text-red-800">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-sm font-medium text-red-800">{error}</p>
           </div>
         )}
 
-        {/* Registration Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Personal Information */}
+        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+          <form onSubmit={handleSubmit} className="p-8 space-y-6">
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+              <h3 className="text-base font-semibold text-neutral-900 mb-4">Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name
-                  </label>
+                  <label htmlFor="name" className="block text-sm font-semibold text-neutral-900 mb-2">Full Name</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="name"
                       name="name"
                       type="text"
                       required
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="John Smith"
                     />
                   </div>
                 </div>
-
-                {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Official Email
-                  </label>
+                  <label htmlFor="email" className="block text-sm font-semibold text-neutral-900 mb-2">Official Email</label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="email"
                       name="email"
                       type="email"
                       required
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="john@department.gov"
                     />
                   </div>
                 </div>
-
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
+                <div className="md:col-span-2">
+                  <label htmlFor="phone" className="block text-sm font-semibold text-neutral-900 mb-2">Phone</label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="phone"
                       name="phone"
                       type="tel"
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -196,38 +182,30 @@ export default function EnterpriseRegister() {
               </div>
             </div>
 
-            {/* Enterprise Information */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Enterprise Information</h3>
+              <h3 className="text-base font-semibold text-neutral-900 mb-4">Enterprise Information</h3>
               <div className="space-y-4">
-                {/* Enterprise Name */}
                 <div>
-                  <label htmlFor="enterpriseName" className="block text-sm font-medium text-gray-700 mb-2">
-                    Enterprise/Department Name
-                  </label>
+                  <label htmlFor="enterpriseName" className="block text-sm font-semibold text-neutral-900 mb-2">Enterprise Name</label>
                   <div className="relative">
-                    <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="enterpriseName"
                       name="enterpriseName"
                       type="text"
                       required
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="City Public Works Department"
                     />
                   </div>
                 </div>
-
-                {/* Department */}
                 <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-2">
-                    Department Category
-                  </label>
+                  <label htmlFor="department" className="block text-sm font-semibold text-neutral-900 mb-2">Department</label>
                   <select
                     id="department"
                     name="department"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                    className="w-full px-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                   >
                     <option value="">Select Department</option>
                     <option value="Infrastructure">Infrastructure & Roads</option>
@@ -241,74 +219,55 @@ export default function EnterpriseRegister() {
                   </select>
                 </div>
 
-                {/* Address */}
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                    Office Address
-                  </label>
+                  <label htmlFor="address" className="block text-sm font-semibold text-neutral-900 mb-2">Office Address</label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <MapPin className="absolute left-4 top-3 w-5 h-5 text-neutral-400" />
                     <textarea
                       id="address"
                       name="address"
                       rows={3}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
-                      placeholder="123 Government Building, Main Street, City, State, ZIP"
+                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      placeholder="123 Government Building, Main Street, City"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Password */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Security</h3>
+              <h3 className="text-base font-semibold text-neutral-900 mb-4">Security</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Password */}
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                    Password
-                  </label>
+                  <label htmlFor="password" className="block text-sm font-semibold text-neutral-900 mb-2">Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="password"
                       name="password"
                       type={showPassword ? 'text' : 'password'}
                       required
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="Create password"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
+                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                 </div>
-
-                {/* Confirm Password */}
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirm Password
-                  </label>
+                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-neutral-900 mb-2">Confirm Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="confirmPassword"
                       name="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
                       required
-                      className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-sm"
+                      className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
                       placeholder="Confirm password"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
+                    <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
                       {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
@@ -316,46 +275,30 @@ export default function EnterpriseRegister() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Submitting Registration...' : 'Register Enterprise'}
+              {isLoading ? 'Submitting...' : 'Register Enterprise'}
             </button>
           </form>
 
-          {/* Links */}
-          <div className="mt-6 text-center space-y-3">
-            <p className="text-sm text-gray-600">
-              Already have an enterprise account?{' '}
-              <Link href="/enterprise/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
-                Sign in here
-              </Link>
+          <div className="px-8 pb-8 pt-4 border-t border-neutral-100">
+            <p className="text-center text-sm text-neutral-600">
+              Already have an account?{' '}
+              <Link href="/enterprise/auth/login" className="font-semibold text-neutral-900 hover:underline">Sign in</Link>
             </p>
-            <div className="border-t border-gray-200 pt-3">
-              <Link 
-                href="/enterprise" 
-                className="text-sm text-gray-500 hover:text-gray-700"
-              >
-                ← Back to Enterprise Portal
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Important Note */}
-        <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-start">
-            <AlertCircle className="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm font-medium text-yellow-800 mb-1">Admin Approval Required</h3>
-              <p className="text-xs text-yellow-700">
-                Your enterprise registration will be reviewed by system administrators. 
-                Only verified government departments and authorized enterprises will be approved.
-                You will receive an email notification once your account status is updated.
-              </p>
+            <div className="mt-6 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-neutral-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="text-sm font-semibold text-neutral-900 mb-0.5">Admin Approval Required</h3>
+                  <p className="text-xs text-neutral-600 leading-relaxed">
+                    Your registration will be reviewed. Only verified departments will be approved. You&apos;ll receive an email once approved.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
