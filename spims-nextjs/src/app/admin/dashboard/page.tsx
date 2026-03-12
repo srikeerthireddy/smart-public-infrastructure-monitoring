@@ -97,6 +97,7 @@ export default function AdminDashboard() {
   const [assigningEnterpriseId, setAssigningEnterpriseId] = useState('');
   const [assignLoading, setAssignLoading] = useState(false);
   const [assignError, setAssignError] = useState('');
+  const [complaintFilter, setComplaintFilter] = useState<'all' | 'reported' | 'in_progress' | 'resolved'>('all');
 
   useEffect(() => {
     fetchDashboardData();
@@ -114,20 +115,19 @@ export default function AdminDashboard() {
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
         setStats(statsData.stats);
-        setRecentActivity(statsData.recentActivity);
+        setRecentActivity(statsData.recentActivity || []);
       }
 
       if (enterprisesResponse.ok) {
         const enterprisesData = await enterprisesResponse.json();
-        console.log('📊 Enterprises data:', enterprisesData); // Debug log
         setPendingEnterprises(
-          enterprisesData.enterprises.filter((e: Enterprise) => e.approval_status === 'pending')
+          (enterprisesData.enterprises || []).filter((e: Enterprise) => e.approval_status === 'pending')
         );
       }
 
       if (usersResponse.ok) {
         const usersData = await usersResponse.json();
-        setAllUsers(usersData.users);
+        setAllUsers(usersData.users || []);
       }
 
       if (complaintsResponse.ok) {
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
       window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
@@ -549,17 +549,21 @@ export default function AdminDashboard() {
                   <div className="p-6 border-b border-gray-200">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-lg font-semibold text-gray-900">All User Complaints</h2>
-                        <p className="text-sm text-gray-600 mt-1">Monitor and manage all complaints from public users</p>
+                        <h2 className="text-base font-semibold text-gray-900">All User Complaints</h2>
+                        <p className="text-xs text-gray-600 mt-0.5">Monitor and manage complaints from public users</p>
                       </div>
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center space-x-2">
                           <Filter className="w-4 h-4 text-gray-400" />
-                          <select className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option>All Status</option>
-                            <option>Reported</option>
-                            <option>In Progress</option>
-                            <option>Resolved</option>
+                          <select
+                            value={complaintFilter}
+                            onChange={(e) => setComplaintFilter(e.target.value as 'all' | 'reported' | 'in_progress' | 'resolved')}
+                            className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          >
+                            <option value="all">All Status ({allComplaints.length})</option>
+                            <option value="reported">Reported ({allComplaints.filter(c => c.status === 'reported').length})</option>
+                            <option value="in_progress">In Progress ({allComplaints.filter(c => c.status === 'in_progress').length})</option>
+                            <option value="resolved">Resolved ({allComplaints.filter(c => c.status === 'resolved').length})</option>
                           </select>
                         </div>
                       </div>
@@ -570,55 +574,61 @@ export default function AdminDashboard() {
                     {allComplaints.length === 0 ? (
                       <div className="text-center py-12">
                         <ClipboardList className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No Complaints Found</h3>
-                        <p className="text-gray-600">No complaints have been submitted by users yet.</p>
+                        <h3 className="text-base font-medium text-gray-900 mb-2">No Complaints Found</h3>
+                        <p className="text-sm text-gray-600">No complaints have been submitted by users yet.</p>
+                      </div>
+                    ) : (complaintFilter === 'all' ? allComplaints : allComplaints.filter(c => c.status === complaintFilter)).length === 0 ? (
+                      <div className="text-center py-12">
+                        <Filter className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <h3 className="text-base font-medium text-gray-900 mb-2">No {complaintFilter.replace('_', ' ')} complaints</h3>
+                        <p className="text-sm text-gray-600">Try selecting a different status filter.</p>
                       </div>
                     ) : (
                       <div className="space-y-6">
                         {/* Complaints Summary */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                             <div className="flex items-center">
-                              <AlertTriangle className="w-8 h-8 text-red-600 mr-3" />
+                              <AlertTriangle className="w-6 h-6 text-red-600 mr-2" />
                               <div>
-                                <p className="text-sm text-red-600">Reported</p>
-                                <p className="text-2xl font-bold text-red-700">
+                                <p className="text-xs text-red-600">Reported</p>
+                                <p className="text-lg font-bold text-red-700">
                                   {allComplaints.filter(c => c.status === 'reported').length}
                                 </p>
                               </div>
                             </div>
                           </div>
                           
-                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                             <div className="flex items-center">
-                              <Clock className="w-8 h-8 text-yellow-600 mr-3" />
+                              <Clock className="w-6 h-6 text-yellow-600 mr-2" />
                               <div>
-                                <p className="text-sm text-yellow-600">In Progress</p>
-                                <p className="text-2xl font-bold text-yellow-700">
+                                <p className="text-xs text-yellow-600">In Progress</p>
+                                <p className="text-lg font-bold text-yellow-700">
                                   {allComplaints.filter(c => c.status === 'in_progress').length}
                                 </p>
                               </div>
                             </div>
                           </div>
                           
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                             <div className="flex items-center">
-                              <CheckCircle className="w-8 h-8 text-green-600 mr-3" />
+                              <CheckCircle className="w-6 h-6 text-green-600 mr-2" />
                               <div>
-                                <p className="text-sm text-green-600">Resolved</p>
-                                <p className="text-2xl font-bold text-green-700">
+                                <p className="text-xs text-green-600">Resolved</p>
+                                <p className="text-lg font-bold text-green-700">
                                   {allComplaints.filter(c => c.status === 'resolved').length}
                                 </p>
                               </div>
                             </div>
                           </div>
                           
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                             <div className="flex items-center">
-                              <ClipboardList className="w-8 h-8 text-blue-600 mr-3" />
+                              <ClipboardList className="w-6 h-6 text-blue-600 mr-2" />
                               <div>
-                                <p className="text-sm text-blue-600">Total</p>
-                                <p className="text-2xl font-bold text-blue-700">{allComplaints.length}</p>
+                                <p className="text-xs text-blue-600">Total</p>
+                                <p className="text-lg font-bold text-blue-700">{allComplaints.length}</p>
                               </div>
                             </div>
                           </div>
@@ -626,8 +636,8 @@ export default function AdminDashboard() {
 
                         {/* Complaints List */}
                         <div className="space-y-4">
-                          {allComplaints.slice(0, 20).map((complaint) => (
-                            <div key={complaint.id} className={`border rounded-lg p-6 transition-all duration-200 hover:shadow-md ${
+                          {(complaintFilter === 'all' ? allComplaints : allComplaints.filter(c => c.status === complaintFilter)).slice(0, 20).map((complaint) => (
+                            <div key={complaint.id} className={`border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
                               complaint.status === 'reported' ? 'border-red-200 bg-red-50' :
                               complaint.status === 'in_progress' ? 'border-yellow-200 bg-yellow-50' :
                               'border-green-200 bg-green-50'
@@ -638,7 +648,7 @@ export default function AdminDashboard() {
                                   <div className="flex items-start justify-between mb-3">
                                     <div className="flex-1">
                                       <div className="flex items-center space-x-3 mb-2">
-                                        <h3 className="text-lg font-semibold text-gray-900">{complaint.title}</h3>
+                                        <h3 className="text-base font-semibold text-gray-900">{complaint.title}</h3>
                                         <span className={`px-3 py-1 text-xs font-medium rounded-full border ${
                                           complaint.status === 'reported' ? 'bg-red-100 text-red-800 border-red-200' :
                                           complaint.status === 'in_progress' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
