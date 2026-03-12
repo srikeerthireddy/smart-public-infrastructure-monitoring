@@ -277,23 +277,23 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="bg-white border-b border-neutral-200">
+    <div className="min-h-screen bg-[#fafafa]">
+      <header className="bg-white border-b border-[#e5e5e5] shadow-[0_1px_0_rgba(0,0,0,0.04)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-5">
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 bg-neutral-900 rounded-xl flex items-center justify-center">
+              <div className="w-11 h-11 bg-[#0a0a0a] rounded-xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-900">Admin Dashboard</h1>
-                <p className="text-sm text-neutral-600 mt-0.5">System Administration Panel</p>
+                <h1 className="text-xl font-bold text-[#0a0a0a]">Admin Dashboard</h1>
+                <p className="text-sm text-[#525252] mt-0.5">System Administration Panel</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-neutral-900">System Administrator</p>
-                <p className="text-xs text-neutral-600">admin@spims.gov</p>
+                <p className="text-sm font-semibold text-[#0a0a0a]">System Administrator</p>
+                <p className="text-xs text-[#525252]">admin@spims.gov</p>
               </div>
               <button
                 onClick={handleLogout}
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <div className="bg-white border-b border-neutral-200">
+      <div className="bg-white border-b border-[#e5e5e5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex gap-1">
             {[
@@ -322,8 +322,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 py-4 px-4 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-neutral-900 text-neutral-900'
-                    : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                    ? 'border-[#0a0a0a] text-[#0a0a0a]'
+                    : 'border-transparent text-[#525252] hover:text-[#0a0a0a] hover:border-[#d4d4d4]'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />

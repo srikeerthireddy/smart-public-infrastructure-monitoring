@@ -72,20 +72,20 @@ export default function EnterpriseRegister() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-16 px-4">
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center py-16 px-4">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-[#e5e5e5] overflow-hidden">
             <div className="p-8 text-center">
               <div className="mx-auto w-14 h-14 bg-emerald-600 rounded-xl flex items-center justify-center mb-5">
                 <CheckCircle className="w-7 h-7 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-neutral-900 mb-1">Registration Submitted</h1>
-              <p className="text-sm text-neutral-600">Your enterprise account is pending admin approval</p>
+              <h1 className="text-2xl font-bold text-[#0a0a0a] mb-1">Registration Submitted</h1>
+              <p className="text-sm text-[#525252]">Your enterprise account is pending admin approval</p>
             </div>
             <div className="px-8 pb-8 space-y-4">
-              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-                <h3 className="text-sm font-semibold text-neutral-900 mb-2">What happens next?</h3>
-                <ul className="text-sm text-neutral-600 space-y-1.5">
+              <div className="p-4 bg-[#fafafa] border border-[#e5e5e5] rounded-xl">
+                <h3 className="text-sm font-semibold text-[#0a0a0a] mb-2">What happens next?</h3>
+                <ul className="text-sm text-[#525252] space-y-1.5">
                   <li>• Admin will review your registration</li>
                   <li>• You&apos;ll receive an email about approval status</li>
                   <li>• Once approved, you can access the dashboard</li>
@@ -94,13 +94,13 @@ export default function EnterpriseRegister() {
               <div className="flex flex-col gap-3">
                 <Link
                   href="/enterprise/auth/login"
-                  className="block w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 transition-colors text-center"
+                  className="block w-full bg-[#0a0a0a] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#262626] transition-colors text-center"
                 >
                   Go to Login
                 </Link>
                 <Link
                   href="/enterprise"
-                  className="block w-full border border-neutral-200 text-neutral-900 py-3 px-4 rounded-xl font-medium hover:bg-neutral-50 transition-colors text-center"
+                  className="block w-full border border-[#e5e5e5] text-[#0a0a0a] py-3 px-4 rounded-xl font-medium hover:bg-[#fafafa] transition-colors text-center"
                 >
                   Back to Portal
                 </Link>
@@ -113,17 +113,17 @@ export default function EnterpriseRegister() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#fafafa] py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
-          <Link href="/enterprise" className="inline-flex items-center text-sm font-medium text-neutral-600 hover:text-neutral-900 mb-6">
+          <Link href="/enterprise" className="inline-flex items-center text-sm font-medium text-[#525252] hover:text-[#0a0a0a] mb-6">
             ← Back to Enterprise Portal
           </Link>
-          <div className="mx-auto w-14 h-14 bg-neutral-900 rounded-xl flex items-center justify-center mb-5">
+          <div className="mx-auto w-14 h-14 bg-[#0a0a0a] rounded-2xl flex items-center justify-center mb-5">
             <Building2 className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-neutral-900 tracking-tight mb-1">Register Enterprise</h1>
-          <p className="text-sm text-neutral-600">Create an account for your government department</p>
+          <h1 className="text-2xl font-bold text-[#0a0a0a] tracking-tight mb-1">Register Enterprise</h1>
+          <p className="text-sm text-[#525252]">Create an account for your government department</p>
         </div>
 
         {error && (
@@ -133,13 +133,13 @@ export default function EnterpriseRegister() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-[#e5e5e5] overflow-hidden">
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             <div>
-              <h3 className="text-base font-semibold text-neutral-900 mb-4">Personal Information</h3>
+              <h3 className="text-base font-semibold text-[#0a0a0a] mb-4">Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-neutral-900 mb-2">Full Name</label>
+                  <label htmlFor="name" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Full Name</label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -147,13 +147,13 @@ export default function EnterpriseRegister() {
                       name="name"
                       type="text"
                       required
-                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="John Smith"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-neutral-900 mb-2">Official Email</label>
+                  <label htmlFor="email" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Official Email</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -161,20 +161,20 @@ export default function EnterpriseRegister() {
                       name="email"
                       type="email"
                       required
-                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="john@department.gov"
                     />
                   </div>
                 </div>
                 <div className="md:col-span-2">
-                  <label htmlFor="phone" className="block text-sm font-semibold text-neutral-900 mb-2">Phone</label>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Phone</label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
                       id="phone"
                       name="phone"
                       type="tel"
-                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="+1 (555) 123-4567"
                     />
                   </div>
@@ -183,10 +183,10 @@ export default function EnterpriseRegister() {
             </div>
 
             <div>
-              <h3 className="text-base font-semibold text-neutral-900 mb-4">Enterprise Information</h3>
+              <h3 className="text-base font-semibold text-[#0a0a0a] mb-4">Enterprise Information</h3>
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="enterpriseName" className="block text-sm font-semibold text-neutral-900 mb-2">Enterprise Name</label>
+                  <label htmlFor="enterpriseName" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Enterprise Name</label>
                   <div className="relative">
                     <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -194,18 +194,18 @@ export default function EnterpriseRegister() {
                       name="enterpriseName"
                       type="text"
                       required
-                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="City Public Works Department"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="department" className="block text-sm font-semibold text-neutral-900 mb-2">Department</label>
+                  <label htmlFor="department" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Department</label>
                   <select
                     id="department"
                     name="department"
                     required
-                    className="w-full px-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                    className="w-full px-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                   >
                     <option value="">Select Department</option>
                     <option value="Infrastructure">Infrastructure & Roads</option>
@@ -220,14 +220,14 @@ export default function EnterpriseRegister() {
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="block text-sm font-semibold text-neutral-900 mb-2">Office Address</label>
+                  <label htmlFor="address" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Office Address</label>
                   <div className="relative">
                     <MapPin className="absolute left-4 top-3 w-5 h-5 text-neutral-400" />
                     <textarea
                       id="address"
                       name="address"
                       rows={3}
-                      className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-4 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="123 Government Building, Main Street, City"
                     />
                   </div>
@@ -236,10 +236,10 @@ export default function EnterpriseRegister() {
             </div>
 
             <div>
-              <h3 className="text-base font-semibold text-neutral-900 mb-4">Security</h3>
+              <h3 className="text-base font-semibold text-[#0a0a0a] mb-4">Security</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="password" className="block text-sm font-semibold text-neutral-900 mb-2">Password</label>
+                  <label htmlFor="password" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -247,7 +247,7 @@ export default function EnterpriseRegister() {
                       name="password"
                       type={showPassword ? 'text' : 'password'}
                       required
-                      className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-12 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="Create password"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
@@ -256,7 +256,7 @@ export default function EnterpriseRegister() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-neutral-900 mb-2">Confirm Password</label>
+                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[#0a0a0a] mb-2">Confirm Password</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -264,7 +264,7 @@ export default function EnterpriseRegister() {
                       name="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
                       required
-                      className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400"
+                      className="w-full pl-11 pr-12 py-3 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] bg-white"
                       placeholder="Confirm password"
                     />
                     <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
@@ -278,23 +278,23 @@ export default function EnterpriseRegister() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-[#0a0a0a] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#262626] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Submitting...' : 'Register Enterprise'}
             </button>
           </form>
 
-          <div className="px-8 pb-8 pt-4 border-t border-neutral-100">
-            <p className="text-center text-sm text-neutral-600">
+          <div className="px-8 pb-8 pt-4 border-t border-[#f0f0f0]">
+            <p className="text-center text-sm text-[#525252]">
               Already have an account?{' '}
-              <Link href="/enterprise/auth/login" className="font-semibold text-neutral-900 hover:underline">Sign in</Link>
+              <Link href="/enterprise/auth/login" className="font-semibold text-[#0a0a0a] hover:underline">Sign in</Link>
             </p>
-            <div className="mt-6 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+            <div className="mt-6 p-4 bg-[#fafafa] border border-[#e5e5e5] rounded-xl">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-neutral-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-[#525252] flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-semibold text-neutral-900 mb-0.5">Admin Approval Required</h3>
-                  <p className="text-xs text-neutral-600 leading-relaxed">
+                  <h3 className="text-sm font-semibold text-[#0a0a0a] mb-0.5">Admin Approval Required</h3>
+                  <p className="text-xs text-[#525252] leading-relaxed">
                     Your registration will be reviewed. Only verified departments will be approved. You&apos;ll receive an email once approved.
                   </p>
                 </div>

@@ -215,18 +215,18 @@ export default function EnterpriseDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="bg-white border-b border-neutral-200">
+    <div className="min-h-screen bg-[#fafafa]">
+      <header className="bg-white border-b border-[#e5e5e5] shadow-[0_1px_0_rgba(0,0,0,0.04)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-5">
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 bg-neutral-900 rounded-xl flex items-center justify-center">
+              <div className="w-11 h-11 bg-[#0a0a0a] rounded-xl flex items-center justify-center">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-900">Enterprise Dashboard</h1>
+                <h1 className="text-xl font-bold text-[#0a0a0a]">Enterprise Dashboard</h1>
                 {user && (
-                  <p className="text-sm text-neutral-600 mt-0.5">
+                  <p className="text-sm text-[#525252] mt-0.5">
                     {user.enterprise.name} · {user.enterprise.department}
                   </p>
                 )}
@@ -234,8 +234,8 @@ export default function EnterpriseDashboard() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-neutral-900">{user?.name}</p>
-                <p className="text-xs text-neutral-600">{user?.email}</p>
+                <p className="text-sm font-semibold text-[#0a0a0a]">{user?.name}</p>
+                <p className="text-xs text-[#525252]">{user?.email}</p>
               </div>
               <button
                 onClick={handleLogout}

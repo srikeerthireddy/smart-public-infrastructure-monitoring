@@ -52,26 +52,23 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-[#fafafa]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(229 229 229 / 0.4) 1px, transparent 0)', backgroundSize: '32px 32px' }}>
       <div className="w-full max-w-md">
-        {/* Back link */}
         <Link 
           href="/" 
-          className="inline-flex items-center text-sm font-medium text-neutral-600 hover:text-neutral-900 mb-8 transition-colors"
+          className="inline-flex items-center text-sm font-medium text-[#525252] hover:text-[#0a0a0a] mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Home
         </Link>
 
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-neutral-200/80 overflow-hidden">
-          {/* Header */}
-          <div className="px-8 pt-10 pb-6 text-center border-b border-neutral-100">
-            <div className="mx-auto w-14 h-14 bg-neutral-900 rounded-xl flex items-center justify-center mb-5">
+        <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-[#e5e5e5] overflow-hidden">
+          <div className="px-8 pt-10 pb-6 text-center border-b border-[#f0f0f0]">
+            <div className="mx-auto w-14 h-14 bg-[#0a0a0a] rounded-2xl flex items-center justify-center mb-5">
               <Shield className="w-7 h-7 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Admin Login</h1>
-            <p className="text-sm text-neutral-600 mt-1">System Administrator Access</p>
+            <h1 className="text-2xl font-bold text-[#0a0a0a] tracking-tight">Admin Login</h1>
+            <p className="text-sm text-[#525252] mt-1">System Administrator Access</p>
           </div>
 
           <div className="p-8">
@@ -84,11 +81,11 @@ export default function LoginForm() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-neutral-900 mb-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-[#0a0a0a] mb-2">
                   Admin Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a3a3a3]" />
                   <input
                     id="email"
                     name="email"
@@ -96,18 +93,18 @@ export default function LoginForm() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    className="w-full pl-11 pr-4 py-3.5 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] transition-all bg-white"
                     placeholder="admin@spims.gov"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-neutral-900 mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-[#0a0a0a] mb-2">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a3a3a3]" />
                   <input
                     id="password"
                     name="password"
@@ -115,13 +112,13 @@ export default function LoginForm() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-12 py-3 border border-neutral-200 rounded-xl text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-400 transition-all"
+                    className="w-full pl-11 pr-12 py-3.5 border border-[#e5e5e5] rounded-xl text-[#0a0a0a] placeholder:text-[#a3a3a3] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a]/10 focus:border-[#737373] transition-all bg-white"
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a3a3a3] hover:text-[#525252]"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -131,19 +128,18 @@ export default function LoginForm() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-neutral-900 text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-[#0a0a0a] text-white py-3.5 px-4 rounded-xl font-semibold hover:bg-[#262626] focus:outline-none focus:ring-2 focus:ring-[#0a0a0a] focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Signing In...' : 'Access Admin Dashboard'}
               </button>
             </form>
 
-            {/* Security Notice */}
-            <div className="mt-6 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
+            <div className="mt-6 p-4 bg-[#fafafa] border border-[#e5e5e5] rounded-xl">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-neutral-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-[#525252] flex-shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-semibold text-neutral-900 mb-0.5">Security Notice</h3>
-                  <p className="text-xs text-neutral-600 leading-relaxed">
+                  <h3 className="text-sm font-semibold text-[#0a0a0a] mb-0.5">Security Notice</h3>
+                  <p className="text-xs text-[#525252] leading-relaxed">
                     Admin access provides full system control. Only authorized personnel should use this login.
                   </p>
                 </div>
